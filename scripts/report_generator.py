@@ -368,10 +368,159 @@ class ReportGenerator:
             placeholder = f"{{{key}}}"
             content = content.replace(placeholder, str(value))
 
+        # Calculate health scores and trends
+        health_data = self._calculate_health_score(data)
+        data.update(health_data)
+
+        trend_data = self._calculate_trends(date_range, data)
+        data.update(trend_data)
+
+        # Fill calculated placeholders
+        for key, value in data.items():
+            placeholder = f"{{{key}}}"
+            content = content.replace(placeholder, str(value))
+
         # Generate insights (placeholder for now)
         content = self._generate_insights(content, data)
 
         return content
+
+    def _calculate_health_score(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Calculate UX health score and issue counts."""
+        # Extract numeric values from formatted strings
+        def extract_num(val_str):
+            if isinstance(val_str, str):
+                return float(val_str.replace(',', '').replace('%', ''))
+            return float(val_str) if val_str else 0
+
+        dead_click_rate = extract_num(data.get('DEAD_CLICK_RATE', '0'))
+        rage_click_rate = extract_num(data.get('RAGE_CLICK_RATE', '0'))
+        quick_back_rate = extract_num(data.get('QUICK_BACK_RATE', '0'))
+        error_click_rate = extract_num(data.get('ERROR_CLICK_RATE', '0'))
+        script_error_rate = extract_num(data.get('SCRIPT_ERROR_RATE', '0'))
+
+        # Count critical issues (thresholds based on industry standards)
+        critical_issues = 0
+        warnings = 0
+        good_signals = 0
+
+        # Dead clicks: critical if >5%, warning if >2%
+        if dead_click_rate > 5:
+            critical_issues += 1
+        elif dead_click_rate > 2:
+            warnings += 1
+        else:
+            good_signals += 1
+
+        # Rage clicks: critical if >1%, warning if >0.5%
+        if rage_click_rate > 1:
+            critical_issues += 1
+        elif rage_click_rate > 0.5:
+            warnings += 1
+        else:
+            good_signals += 1
+
+        # Quick backs: critical if >10%, warning if >5%
+        if quick_back_rate > 10:
+            critical_issues += 1
+        elif quick_back_rate > 5:
+            warnings += 1
+        else:
+            good_signals += 1
+
+        # Error clicks: critical if >1%, warning if >0%
+        if error_click_rate > 1:
+            critical_issues += 1
+        elif error_click_rate > 0:
+            warnings += 1
+        else:
+            good_signals += 1
+
+        # Script errors: critical if >0.5%, warning if >0%
+        if script_error_rate > 0.5:
+            critical_issues += 1
+        elif script_error_rate > 0:
+            warnings += 1
+        else:
+            good_signals += 1
+
+        # Calculate overall health score (0-100)
+        # Start at 100, deduct points for issues
+        score = 100
+        score -= critical_issues * 15  # -15 per critical issue
+        score -= warnings * 7  # -7 per warning
+        score = max(0, score)  # Don't go below 0
+
+        # Health indicator
+        if score >= 80:
+            indicator = "🟢 Excellent"
+        elif score >= 60:
+            indicator = "🟡 Good"
+        elif score >= 40:
+            indicator = "🟠 Fair"
+        else:
+            indicator = "🔴 Needs Attention"
+
+        return {
+            'UX_HEALTH_SCORE': str(score),
+            'HEALTH_INDICATOR': indicator,
+            'CRITICAL_ISSUES_COUNT': str(critical_issues),
+            'WARNINGS_COUNT': str(warnings),
+            'GOOD_SIGNALS_COUNT': str(good_signals),
+        }
+
+    def _calculate_trends(self, date_range: DateRange, current_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Calculate trend indicators by comparing to previous period."""
+        # Calculate previous period (same length as current)
+        period_length = (date_range.end - date_range.start).days + 1
+        from datetime import timedelta
+        prev_end = date_range.start - timedelta(days=1)
+        prev_start = prev_end - timedelta(days=period_length - 1)
+        prev_range = DateRange(prev_start, prev_end)
+
+        # Try to get previous period data
+        try:
+            prev_data = self._gather_data(prev_range)
+        except:
+            # If no previous data, return neutral trends
+            return {
+                'SESSIONS_TREND': '→',
+                'USERS_TREND': '→',
+                'DEAD_CLICK_TREND': '→',
+                'RAGE_CLICK_TREND': '→',
+                'QUICK_BACK_TREND': '→',
+                'SCROLL_DEPTH_TREND': '→',
+                'ENGAGEMENT_TREND': '→',
+            }
+
+        def extract_num(val_str):
+            if isinstance(val_str, str):
+                return float(val_str.replace(',', '').replace('%', ''))
+            return float(val_str) if val_str else 0
+
+        def calc_trend(current_val, prev_val, higher_is_better=True):
+            """Calculate trend indicator."""
+            curr = extract_num(current_val)
+            prev = extract_num(prev_val)
+            if prev == 0:
+                return '→'
+            change_pct = ((curr - prev) / prev) * 100
+            if abs(change_pct) < 5:  # Less than 5% change is neutral
+                return '→'
+            if higher_is_better:
+                return '↑' if change_pct > 0 else '↓'
+            else:
+                return '↓' if change_pct > 0 else '↑'  # Inverted for frustration metrics
+
+        return {
+            'SESSIONS_TREND': calc_trend(current_data.get('TOTAL_SESSIONS', '0'), prev_data.get('TOTAL_SESSIONS', '0'), True),
+            'USERS_TREND': calc_trend(current_data.get('UNIQUE_USERS', '0'), prev_data.get('UNIQUE_USERS', '0'), True),
+            'DEAD_CLICK_TREND': calc_trend(current_data.get('DEAD_CLICK_RATE', '0'), prev_data.get('DEAD_CLICK_RATE', '0'), False),
+            'RAGE_CLICK_TREND': calc_trend(current_data.get('RAGE_CLICK_RATE', '0'), prev_data.get('RAGE_CLICK_RATE', '0'), False),
+            'QUICK_BACK_TREND': calc_trend(current_data.get('QUICK_BACK_RATE', '0'), prev_data.get('QUICK_BACK_RATE', '0'), False),
+            'SCROLL_DEPTH_TREND': calc_trend(current_data.get('AVG_SCROLL_DEPTH', '0'), prev_data.get('AVG_SCROLL_DEPTH', '0'), True),
+            'ENGAGEMENT_TREND': calc_trend(current_data.get('AVG_ENGAGEMENT_TIME', '0'), prev_data.get('AVG_ENGAGEMENT_TIME', '0'), True),
+        }
 
     def _generate_insights(self, content: str, data: Dict[str, Any]) -> str:
         """Generate audience-specific insights."""

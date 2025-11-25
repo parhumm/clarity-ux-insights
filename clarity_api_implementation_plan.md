@@ -1,6 +1,6 @@
 # Clarity API Integration & Insights Dashboard - Implementation Plan
 
-**Project:** televika.com Clarity Analytics System
+**Project:** Microsoft Clarity Analytics System
 **Client:** UX Researcher & Product Manager
 **Date:** 2025-11-24
 
@@ -111,7 +111,7 @@ class ClarityAPIClient:
 **File:** `.env`
 ```
 CLARITY_API_TOKEN=your_jwt_token_here
-CLARITY_PROJECT_ID=televika_project_id
+CLARITY_PROJECT_ID=your_project_id
 API_BASE_URL=https://www.clarity.ms/export-data/api/v1
 ```
 
@@ -1188,7 +1188,7 @@ python -m pytest tests/test_api_client.py
 ```bash
 # Clarity API Configuration
 CLARITY_API_TOKEN=your_jwt_token_here
-CLARITY_PROJECT_ID=televika_project_id
+CLARITY_PROJECT_ID=your_project_id
 
 # Database
 DB_PATH=data/clarity_data.db
@@ -1202,8 +1202,8 @@ JSON_EXPORT_PATH=exports/json/
 # Email (optional)
 EMAIL_ENABLED=false
 SENDGRID_API_KEY=your_sendgrid_key
-EMAIL_FROM=reports@televika.com
-EMAIL_TO=your.email@televika.com
+EMAIL_FROM=reports@example.com
+EMAIL_TO=your.email@example.com
 
 # Scheduling
 COLLECTION_TIME_UTC=01:00

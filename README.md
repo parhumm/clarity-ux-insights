@@ -1,6 +1,6 @@
 # Clarity API Data Collection & Analysis
 
-A Python-based system to fetch, store, and analyze data from Microsoft Clarity's Data Export API for televika.com.
+A Python-based system to fetch, store, and analyze data from Microsoft Clarity's Data Export API for your website.
 
 ## 🎯 Project Overview
 
@@ -120,7 +120,21 @@ clarity_api/
    ```
 
 3. **Configure Environment:**
-   The `.env` file is already set up with your API token.
+   ```bash
+   # Copy the example environment file
+   cp .env.example .env
+
+   # Edit .env and add your credentials
+   # - Get your API token from https://clarity.microsoft.com/settings
+   # - Find your project ID in Clarity project settings
+   nano .env  # or use your preferred editor
+   ```
+
+   **Required values in `.env`:**
+   - `CLARITY_API_TOKEN`: Your JWT token from Clarity (Data Export scope)
+   - `CLARITY_PROJECT_ID`: Your Clarity project identifier
+
+   ⚠️ **Security:** Never commit your `.env` file to git!
 
 4. **Test Configuration:**
    ```bash
@@ -321,10 +335,22 @@ print(mobile_data['pages_per_session'].mean())
 
 ## 🔐 Security Notes
 
+**Important:** This project handles API credentials and analytics data. Please review [SECURITY.md](SECURITY.md) for complete security guidelines.
+
+### Quick Security Checklist
 - ✅ API token stored in `.env` (not committed to git)
 - ✅ Data files excluded from git (in `.gitignore`)
+- ✅ `.env.example` provided with dummy values
 - ✅ Client-side hashing for custom IDs
 - ✅ No PII collected (aggregated data only)
+
+### Never Commit
+- ❌ `.env` file with real credentials
+- ❌ `data/` directory with analytics data
+- ❌ Database files (`*.db`)
+- ❌ CSV/JSON exports with real data
+
+See [SECURITY.md](SECURITY.md) for detailed security practices and recovery procedures.
 
 ## 📝 Git History
 

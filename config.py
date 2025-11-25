@@ -15,7 +15,7 @@ EXPORT_DIR = DATA_DIR / "exports"
 
 # Clarity API Configuration
 CLARITY_API_TOKEN = os.getenv("CLARITY_API_TOKEN")
-CLARITY_PROJECT_ID = os.getenv("CLARITY_PROJECT_ID", "televika")
+CLARITY_PROJECT_ID = os.getenv("CLARITY_PROJECT_ID", "YOUR_PROJECT_ID")
 API_BASE_URL = os.getenv("API_BASE_URL", "https://www.clarity.ms/export-data/api/v1")
 
 # API Endpoints

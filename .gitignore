@@ -17,11 +17,23 @@ venv/
 env/
 ENV/
 
-# Data files
-data/
+# Data files - all user data must stay local
+data/*
+!data/.gitkeep
 *.db
 *.csv
-*.json
+
+# Reports - generated reports contain user data
+reports/**/*.md
+reports/**/*.yaml
+reports/**/20*
+
+# User configuration - project-specific
+config.yaml
+
+# Test results - may contain user data
+tests/test_results/*
+!tests/test_results/.gitkeep
 
 # IDE
 .vscode/

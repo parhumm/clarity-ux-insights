@@ -31,9 +31,10 @@ reports/**/20*
 # User configuration - project-specific
 config.yaml
 
-# Test results - may contain user data
-tests/test_results/*
-!tests/test_results/.gitkeep
+# Test results - allow markdown documentation, block data files
+tests/test_results/*.json
+tests/test_results/*.csv
+tests/test_results/*.db
 
 # IDE
 .vscode/

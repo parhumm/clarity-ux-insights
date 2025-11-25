@@ -1,0 +1,65 @@
+# E-commerce Site Configuration Example
+# For online stores, marketplaces, and shopping platforms
+
+project:
+  name: "My E-commerce Store"
+  type: "e-commerce"
+  url: "https://shop.example.com"
+
+clarity:
+  default_dimensions: ["Device", "Country", "Browser"]
+  api_rate_limit: 10
+  timeout_seconds: 30
+
+tracking:
+  pages:
+    - id: page-001
+      path: "/checkout"
+      name: "Checkout"
+      category: "conversion"
+
+    - id: page-002
+      path: "/cart"
+      name: "Shopping Cart"
+      category: "conversion"
+
+    - id: page-003
+      path: "/product/*"
+      name: "Product Pages"
+      category: "content"
+
+    - id: page-004
+      path: "/search"
+      name: "Product Search"
+      category: "discovery"
+
+    - id: page-005
+      path: "/category/*"
+      name: "Category Pages"
+      category: "discovery"
+
+  auto_track_patterns:
+    - pattern: "^/product/.*"
+      category: "product"
+    - pattern: "^/checkout.*"
+      category: "conversion"
+
+data:
+  retention_days: 90
+  auto_cleanup: true
+  max_storage_gb: 10
+  compress_archives: true
+
+reports:
+  default_period_days: 7
+  generate_on_fetch: true
+  output_formats: ["markdown", "csv"]
+  auto_generate:
+    - "ux-health"
+    - "frustration-analysis"
+    - "device-performance"
+    - "content-performance"
+  archive_reports_after_days: 90
+
+notifications:
+  enabled: false

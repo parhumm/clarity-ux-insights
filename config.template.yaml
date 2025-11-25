@@ -1,0 +1,98 @@
+# Clarity UX Insights Configuration Template
+# Copy this file to config.yaml and customize for your project
+
+project:
+  # Your project name (used in reports)
+  name: "My Website"
+
+  # Project type: e-commerce, saas, blog, media, streaming, education, etc.
+  type: "website"
+
+  # Optional: Your website URL
+  url: "https://example.com"
+
+# Clarity API configuration
+clarity:
+  # API token is loaded from .env file (CLARITY_API_TOKEN)
+  # Do not put your token here!
+
+  # Default dimensions to fetch (Device, Country, Browser, OS, PageTitle, ReferrerUrl)
+  default_dimensions: ["Device", "Country", "Browser"]
+
+  # API rate limit (requests per day)
+  api_rate_limit: 10
+
+  # Request timeout in seconds
+  timeout_seconds: 30
+
+# Page tracking configuration
+tracking:
+  # Define pages you want to track specifically
+  # Leave empty [] to only track general site-wide metrics
+  pages:
+    # Example pages (customize for your site):
+    # - id: page-001
+    #   path: "/checkout"
+    #   name: "Checkout Page"
+    #   category: "conversion"
+    #
+    # - id: page-002
+    #   path: "/search"
+    #   name: "Search"
+    #   category: "discovery"
+    #
+    # - id: page-003
+    #   path: "/product/*"
+    #   name: "Product Pages"
+    #   category: "content"
+
+  # Auto-track patterns (regex) - automatically create tracking for matching URLs
+  auto_track_patterns:
+    # Example patterns:
+    # - pattern: "^/product/.*"
+    #   category: "product"
+    # - pattern: "^/blog/.*"
+    #   category: "content"
+    # - pattern: "^/checkout.*"
+    #   category: "conversion"
+
+# Data management
+data:
+  # Keep data in current/ directory for this many days
+  retention_days: 90
+
+  # Automatically archive data older than retention_days
+  auto_cleanup: true
+
+  # Warning threshold for storage (in GB)
+  max_storage_gb: 10
+
+  # Compress archived data
+  compress_archives: true
+
+# Report generation
+reports:
+  # Default period for reports (in days)
+  default_period_days: 3
+
+  # Automatically generate reports after fetching new data
+  generate_on_fetch: true
+
+  # Output formats: markdown, csv, json
+  output_formats: ["markdown", "csv"]
+
+  # Report types to generate automatically
+  auto_generate:
+    - "ux-health"
+    - "frustration-analysis"
+    - "device-performance"
+
+  # Keep reports for this many days before archiving
+  archive_reports_after_days: 90
+
+# Notifications (optional - for future implementation)
+notifications:
+  enabled: false
+  # email: "you@example.com"
+  # alert_on_high_frustration: true
+  # frustration_threshold: 20.0

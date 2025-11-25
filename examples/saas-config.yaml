@@ -1,0 +1,65 @@
+# SaaS Application Configuration Example
+# For web applications, dashboards, and SaaS platforms
+
+project:
+  name: "My SaaS Platform"
+  type: "saas"
+  url: "https://app.example.com"
+
+clarity:
+  default_dimensions: ["Device", "Browser", "Country"]
+  api_rate_limit: 10
+  timeout_seconds: 30
+
+tracking:
+  pages:
+    - id: page-001
+      path: "/signup"
+      name: "Signup Page"
+      category: "conversion"
+
+    - id: page-002
+      path: "/login"
+      name: "Login Page"
+      category: "authentication"
+
+    - id: page-003
+      path: "/dashboard"
+      name: "Dashboard"
+      category: "core-feature"
+
+    - id: page-004
+      path: "/settings"
+      name: "Settings"
+      category: "account"
+
+    - id: page-005
+      path: "/billing"
+      name: "Billing & Subscriptions"
+      category: "conversion"
+
+  auto_track_patterns:
+    - pattern: "^/dashboard.*"
+      category: "core-feature"
+    - pattern: "^/settings.*"
+      category: "account"
+
+data:
+  retention_days: 180  # Keep more data for SaaS analytics
+  auto_cleanup: true
+  max_storage_gb: 20
+  compress_archives: true
+
+reports:
+  default_period_days: 7
+  generate_on_fetch: true
+  output_formats: ["markdown", "csv", "json"]
+  auto_generate:
+    - "ux-health"
+    - "frustration-analysis"
+    - "device-performance"
+    - "engagement-analysis"
+  archive_reports_after_days: 180
+
+notifications:
+  enabled: false

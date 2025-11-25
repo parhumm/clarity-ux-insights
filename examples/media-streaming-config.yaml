@@ -1,0 +1,75 @@
+# Media/Streaming Platform Configuration Example
+# For video/audio streaming, media sites, and content platforms
+
+project:
+  name: "My Streaming Platform"
+  type: "media"
+  url: "https://stream.example.com"
+
+clarity:
+  default_dimensions: ["Device", "Country", "Browser"]
+  api_rate_limit: 10
+  timeout_seconds: 30
+
+tracking:
+  pages:
+    - id: page-001
+      path: "/"
+      name: "Homepage"
+      category: "landing"
+
+    - id: page-002
+      path: "/watch/*"
+      name: "Video Player"
+      category: "content"
+
+    - id: page-003
+      path: "/search"
+      name: "Content Search"
+      category: "discovery"
+
+    - id: page-004
+      path: "/browse/*"
+      name: "Browse/Category"
+      category: "discovery"
+
+    - id: page-005
+      path: "/live"
+      name: "Live TV/Streams"
+      category: "content"
+
+    - id: page-006
+      path: "/subscribe"
+      name: "Subscription/Payment"
+      category: "conversion"
+
+  auto_track_patterns:
+    - pattern: "^/watch/.*"
+      category: "content"
+    - pattern: "^/m/.*"
+      category: "movie"
+    - pattern: "^/s/.*"
+      category: "series"
+    - pattern: "^/browse/.*"
+      category: "discovery"
+
+data:
+  retention_days: 90
+  auto_cleanup: true
+  max_storage_gb: 15
+  compress_archives: true
+
+reports:
+  default_period_days: 3
+  generate_on_fetch: true
+  output_formats: ["markdown", "csv"]
+  auto_generate:
+    - "ux-health"
+    - "frustration-analysis"
+    - "device-performance"
+    - "content-performance"
+    - "geographic-insights"
+  archive_reports_after_days: 90
+
+notifications:
+  enabled: false

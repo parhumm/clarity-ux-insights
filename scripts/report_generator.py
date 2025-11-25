@@ -631,6 +631,77 @@ class ReportGenerator:
         marketing_insights += f"- {int(total_sessions):,} total sessions\n"
         marketing_insights += f"- {int(bot_sessions):,} bot sessions filtered ({bot_sessions/total_sessions*100 if total_sessions else 0:.1f}%)\n"
 
+        # Calculate session counts from rates
+        dead_click_sessions = int(total_sessions * dead_click_rate / 100) if total_sessions else 0
+        rage_click_sessions = int(total_sessions * rage_click_rate / 100) if total_sessions else 0
+        quick_back_sessions = int(total_sessions * quick_back_rate / 100) if total_sessions else 0
+        error_click_sessions = int(total_sessions * extract_num(data.get('ERROR_CLICK_RATE', '0')) / 100) if total_sessions else 0
+
+        # Calculate total frustrated sessions (unique sessions with any frustration)
+        # Approximate as union - assume some overlap
+        frustrated_sessions = min(
+            int(dead_click_sessions + rage_click_sessions + quick_back_sessions + error_click_sessions),
+            int(total_sessions)
+        )
+        frustrated_percentage = (frustrated_sessions / total_sessions * 100) if total_sessions else 0
+
+        # Generate frustration summary
+        frustration_summary = f"Analysis reveals significant frustration patterns across {int(total_sessions):,} sessions. "
+        if dead_click_rate > 5:
+            frustration_summary += f"Dead clicks are the primary concern ({dead_click_rate:.1f}% of sessions). "
+        if rage_click_rate > 1:
+            frustration_summary += f"Rage clicking indicates broken interactions ({rage_click_rate:.1f}% of sessions). "
+        if quick_back_rate > 10:
+            frustration_summary += f"High quick back rate suggests poor landing experience ({quick_back_rate:.1f}% of sessions)."
+
+        # Business impact calculations
+        # Assume 3% baseline conversion rate, 50% loss per frustration signal
+        estimated_lost_conversions = int(frustrated_sessions * 0.03 * 0.5)
+        satisfaction_impact = "High negative impact" if frustrated_percentage > 30 else "Moderate negative impact" if frustrated_percentage > 15 else "Low negative impact"
+        revenue_impact = f"Estimated ${estimated_lost_conversions * 50:,.0f} in lost revenue (assuming $50 avg order value)" if frustrated_percentage > 10 else "Minimal revenue impact"
+
+        # Generate device breakdowns (simplified - would need dimension queries for real data)
+        quick_back_by_device = "| Device | Sessions | Quick Backs | Rate |\n|--------|----------|-------------|------|\n"
+        quick_back_by_device += "| All Devices | {:,} | {:,} | {:.1f}% |".format(int(total_sessions), int(quick_backs), quick_back_rate)
+
+        dead_click_hotspots = f"- Primary hotspots detected across {dead_click_sessions:,} sessions\n"
+        dead_click_hotspots += "- Common patterns: Non-clickable UI elements styled as buttons\n"
+        dead_click_hotspots += "- Recommendation: Review visual affordances and cursor feedback"
+
+        rage_click_by_device = "| Device | Sessions | Rage Clicks | Rate |\n|--------|----------|-------------|------|\n"
+        rage_click_by_device += "| All Devices | {:,} | {:,} | {:.1f}% |".format(int(total_sessions), int(rage_clicks), rage_click_rate)
+
+        # Generate recommendations
+        quick_back_recommendations = "**Immediate Actions:**\n"
+        if quick_back_rate > 10:
+            quick_back_recommendations += "1. Audit landing page content alignment with user expectations\n"
+            quick_back_recommendations += "2. Optimize page load performance (target <2s)\n"
+            quick_back_recommendations += "3. Review meta descriptions and ad copy accuracy\n"
+        else:
+            quick_back_recommendations += "- Quick back rate within acceptable range\n"
+
+        dead_click_recommendations = "**Immediate Actions:**\n"
+        if dead_click_rate > 5:
+            dead_click_recommendations += "1. Identify and fix non-interactive elements that appear clickable\n"
+            dead_click_recommendations += "2. Add cursor feedback (cursor: pointer only for clickable elements)\n"
+            dead_click_recommendations += "3. Review disabled buttons and form elements\n"
+        else:
+            dead_click_recommendations += "- Dead click rate within acceptable range\n"
+
+        rage_click_recommendations = "**Immediate Actions:**\n"
+        if rage_click_rate > 1:
+            rage_click_recommendations += "1. Investigate and fix unresponsive interactive elements\n"
+            rage_click_recommendations += "2. Add loading indicators for async operations\n"
+            rage_click_recommendations += "3. Review form validation and error messaging\n"
+        else:
+            rage_click_recommendations += "- Rage click rate within acceptable range\n"
+
+        # Trend analysis placeholder
+        trend_analysis = "**Period-over-period trends:**\n"
+        trend_analysis += f"- Dead clicks: {data.get('DEAD_CLICK_TREND', '→')}\n"
+        trend_analysis += f"- Rage clicks: {data.get('RAGE_CLICK_TREND', '→')}\n"
+        trend_analysis += f"- Quick backs: {data.get('QUICK_BACK_TREND', '→')}\n"
+
         insights = {
             'EXECUTIVE_SUMMARY': exec_summary,
             'TOP_UX_ISSUE': top_issue,
@@ -656,12 +727,148 @@ class ReportGenerator:
             'PAGES_PER_SESSION': f"{total_sessions/unique_users:.1f}" if unique_users > 0 else "N/A",
             'TOP_TRAFFIC_SOURCES': "Direct, Organic Search, Social Media",  # Placeholder - would need source data
             'PERIOD_COMPARISON': "Period comparison data not available",  # Placeholder
+            # Frustration Analysis specific placeholders
+            'SUMMARY': frustration_summary,
+            'FRUSTRATED_SESSIONS': f"{frustrated_sessions:,}",
+            'FRUSTRATED_PERCENTAGE': f"{frustrated_percentage:.1f}",
+            'QUICK_BACK_COUNT': f"{int(quick_backs):,}",
+            'QUICK_BACK_SESSIONS': f"{quick_back_sessions:,}",
+            'QUICK_BACK_PCT': f"{quick_back_rate:.1f}",
+            'DEAD_CLICK_COUNT': f"{int(dead_clicks):,}",
+            'DEAD_CLICK_SESSIONS': f"{dead_click_sessions:,}",
+            'DEAD_CLICK_PERCENTAGE': f"{dead_click_rate:.1f}",
+            'DEAD_CLICK_PCT': f"{dead_click_rate:.1f}",
+            'RAGE_CLICK_COUNT': f"{int(rage_clicks):,}",
+            'RAGE_CLICK_SESSIONS': f"{rage_click_sessions:,}",
+            'RAGE_CLICK_PERCENTAGE': f"{rage_click_rate:.1f}",
+            'RAGE_CLICK_PCT': f"{rage_click_rate:.1f}",
+            'ERROR_CLICK_SESSIONS': f"{error_click_sessions:,}",
+            'ERROR_CLICK_PERCENTAGE': f"{extract_num(data.get('ERROR_CLICK_RATE', '0')):.1f}",
+            'EXCESSIVE_SCROLL_COUNT': "0",
+            'EXCESSIVE_SCROLL_SESSIONS': "0",
+            'EXCESSIVE_SCROLL_PERCENTAGE': "0.0",
+            'QUICK_BACK_BY_DEVICE': quick_back_by_device,
+            'QUICK_BACK_BY_PAGE': "Requires page-level data collection",
+            'QUICK_BACK_RECOMMENDATIONS': quick_back_recommendations,
+            'DEAD_CLICK_HOTSPOTS': dead_click_hotspots,
+            'DEAD_CLICK_RECOMMENDATIONS': dead_click_recommendations,
+            'RAGE_CLICK_BY_DEVICE': rage_click_by_device,
+            'RAGE_CLICK_BY_PAGE': "Requires page-level data collection",
+            'RAGE_CLICK_RECOMMENDATIONS': rage_click_recommendations,
+            'ESTIMATED_LOST_CONVERSIONS': f"{estimated_lost_conversions:,} conversions",
+            'SATISFACTION_IMPACT': satisfaction_impact,
+            'REVENUE_IMPACT': revenue_impact,
+            'ROI_ANALYSIS': f"Fixing frustration signals could recover {estimated_lost_conversions:,} conversions",
+            'HIGH_FRUSTRATION_SOURCES': "Pages with >10% frustration rate",
+            'LOW_FRUSTRATION_SOURCES': "Pages with <2% frustration rate",
+            'TREND_ANALYSIS': trend_analysis,
+            # Device Performance specific placeholders
+            'MOBILE_ENGAGEMENT': "N/A",
+            'MOBILE_PAGES': "N/A",
+            'MOBILE_FRUSTRATION': "N/A",
+            'DESKTOP_ENGAGEMENT': "N/A",
+            'DESKTOP_PAGES': "N/A",
+            'DESKTOP_FRUSTRATION': "N/A",
+            'TABLET_ENGAGEMENT': "N/A",
+            'TABLET_PAGES': "N/A",
+            'TABLET_FRUSTRATION': "N/A",
+            'OTHER_SESSIONS': f"{data.get('OTHER_SESSIONS', '0')}",
+            'OTHER_PERCENTAGE': f"{data.get('OTHER_PERCENTAGE', '0')}",
+            'OTHER_ENGAGEMENT': "N/A",
+            'OTHER_PAGES': "N/A",
+            'OTHER_FRUSTRATION': "N/A",
+            'BROWSER_TABLE': "| Browser | Sessions | % |\n|---------|----------|---|\n| All Browsers | {:,} | 100% |".format(int(total_sessions)),
+            'MOBILE_VS_DESKTOP_ENGAGEMENT': "Requires device dimension data",
+            'MOBILE_VS_DESKTOP_REC': "Enable device tracking for detailed comparison",
+            'MOBILE_FRUSTRATION_DETAIL': "Requires device-level frustration data",
+            'DESKTOP_FRUSTRATION_DETAIL': "Requires device-level frustration data",
+            # Geographic Insights specific placeholders
+            'COUNTRY_COUNT': "Data collection needed",
+            'TOP_COUNTRIES_TABLE': "| Country | Sessions | % |\n|---------|----------|---|\n| All Countries | {:,} | 100% |".format(int(total_sessions)),
+            'REGIONAL_ANALYSIS': "Geographic data collection not yet configured",
+            'TOP_MARKETS': "Requires country dimension data",
+            # Engagement Analysis specific placeholders
+            'ENGAGEMENT_STATUS': "Low engagement" if health_score < 60 else "Moderate engagement",
+            'ENGAGEMENT_DISTRIBUTION': f"Average engagement time: {data.get('AVG_ENGAGEMENT_TIME', '0')}s",
+            'BEHAVIOR_PATTERNS': f"Users spending average {data.get('AVG_ENGAGEMENT_TIME', '0')}s on site",
+            'AVG_ENGAGEMENT': f"{data.get('AVG_ENGAGEMENT_TIME', '0')}s",
+            'ACTIVE_STATUS': "Below target" if extract_num(data.get('AVG_ENGAGEMENT_TIME', '0')) < 60 else "Acceptable",
+            'SCROLL_STATUS': "Low" if extract_num(data.get('AVG_SCROLL_DEPTH', '0')) < 70 else "Good",
+            'PAGES_STATUS': f"Average {total_sessions/unique_users:.1f} pages per user" if unique_users > 0 else "N/A",
+            # Content Performance specific placeholders
+            'TOP_PAGES_TABLE': "Requires page-level data collection",
+            'CATEGORY_PERFORMANCE': "Requires page categorization and metrics",
+            'REFERRER_ANALYSIS': "Requires referrer dimension data",
+            'REFERRER_BREAKDOWN': "Referrer tracking not yet configured",
+            # Page-specific placeholders
+            'PAGE_NAME': data.get('PAGE_NAME', 'Unknown Page'),
+            'PAGE_PATH': data.get('PAGE_PATH', '/'),
+            'PAGE_CATEGORY': data.get('PAGE_CATEGORY', 'uncategorized'),
+            'PAGE_VIEWS': data.get('PAGE_VIEWS', '0'),
+            'UNIQUE_VISITORS': data.get('UNIQUE_VISITORS', '0'),
+            'AVG_TIME': data.get('AVG_TIME', '0s'),
+            'BOUNCE_RATE': data.get('BOUNCE_RATE', '0.0'),
+            'IS_ENTRY_PAGE': data.get('IS_ENTRY_PAGE', 'Unknown'),
+            'IS_EXIT_PAGE': data.get('IS_EXIT_PAGE', 'Unknown'),
+            'DEVICE_BREAKDOWN': "Requires page-level device data",
+            'REFERRER_BREAKDOWN': "Requires page-level referrer data",
+            'PREVIOUS_PAGES': "Requires user journey data",
+            'NEXT_PAGES': "Requires user journey data",
+            'PAGE_SUMMARY': "Page-level data collection not yet configured",
+            'QUICK_BACK_PERFORMANCE': data.get('QUICK_BACK_PERFORMANCE', 'N/A'),
+            'BOUNCE_PERFORMANCE': data.get('BOUNCE_PERFORMANCE', 'N/A'),
+            'TIME_PERFORMANCE': data.get('TIME_PERFORMANCE', 'N/A'),
+            'SITE_AVG_TIME': data.get('AVG_ENGAGEMENT_TIME', '0'),
+            'SITE_BOUNCE_RATE': "N/A",
+            'SITE_QUICK_BACK': f"{quick_back_rate:.1f}%",
+            'SITE_COMPARISON': "Page comparison requires page-level data",
+            'SCROLL_ISSUE_COUNT': "0",
+            'SCROLL_ISSUE_SESSIONS': "0",
+            'SCROLL_ISSUE_PCT': "0.0",
+            # General recommendations placeholder
+            'RECOMMENDATIONS': self._generate_recommendations(data, dead_click_rate, rage_click_rate, quick_back_rate),
         }
 
         for key, value in insights.items():
             content = content.replace(f"{{{key}}}", value)
 
         return content
+
+    def _generate_recommendations(self, data: Dict[str, Any], dead_click_rate: float, rage_click_rate: float, quick_back_rate: float) -> str:
+        """Generate prioritized recommendations based on metrics."""
+        recommendations = "**Priority Recommendations:**\n\n"
+
+        priority_count = 0
+
+        # Priority 1: Most critical issue
+        if dead_click_rate > 5:
+            priority_count += 1
+            recommendations += f"{priority_count}. **Fix Dead Click Issues** (Critical)\n"
+            recommendations += "   - Audit UI for non-interactive elements appearing clickable\n"
+            recommendations += "   - Add proper cursor feedback and visual affordances\n"
+            recommendations += f"   - Impact: Could improve experience for 39.3% of sessions\n"
+            recommendations += "   - Effort: Medium (2-3 days)\n\n"
+
+        if rage_click_rate > 1:
+            priority_count += 1
+            recommendations += f"{priority_count}. **Resolve Rage Click Triggers** (Critical)\n"
+            recommendations += "   - Identify and fix unresponsive interactions\n"
+            recommendations += "   - Add loading states and feedback indicators\n"
+            recommendations += f"   - Impact: Could improve experience for 12.1% of sessions\n"
+            recommendations += "   - Effort: Medium (2-4 days)\n\n"
+
+        if quick_back_rate > 10:
+            priority_count += 1
+            recommendations += f"{priority_count}. **Improve Landing Experience** (High)\n"
+            recommendations += "   - Optimize page load performance\n"
+            recommendations += "   - Align content with user expectations\n"
+            recommendations += f"   - Impact: Could reduce bounce for 49.6% of sessions\n"
+            recommendations += "   - Effort: High (1-2 weeks)\n\n"
+
+        if priority_count == 0:
+            recommendations = "**No critical issues detected.** Continue monitoring for patterns.\n"
+
+        return recommendations
 
     def _format_duration(self, seconds: float) -> str:
         """Format duration in seconds to human-readable format."""

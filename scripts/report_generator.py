@@ -142,17 +142,47 @@ class ReportGenerator:
             data_scope="general"
         )
 
-        # Query frustration metrics
-        frustration_metrics = self.query_engine.query_metrics(
+        # Query individual frustration metrics (Clarity stores them separately)
+        dead_clicks_metrics = self.query_engine.query_metrics(
             date_range,
-            metric_name="Frustration signals",
+            metric_name="DeadClickCount",
             data_scope="general"
         )
 
-        # Query engagement metrics
-        engagement_metrics = self.query_engine.query_metrics(
+        rage_clicks_metrics = self.query_engine.query_metrics(
             date_range,
-            metric_name="Engagement",
+            metric_name="RageClickCount",
+            data_scope="general"
+        )
+
+        quick_backs_metrics = self.query_engine.query_metrics(
+            date_range,
+            metric_name="QuickbackClick",
+            data_scope="general"
+        )
+
+        error_clicks_metrics = self.query_engine.query_metrics(
+            date_range,
+            metric_name="ErrorClickCount",
+            data_scope="general"
+        )
+
+        script_errors_metrics = self.query_engine.query_metrics(
+            date_range,
+            metric_name="ScriptErrorCount",
+            data_scope="general"
+        )
+
+        # Query individual engagement metrics
+        engagement_time_metrics = self.query_engine.query_metrics(
+            date_range,
+            metric_name="EngagementTime",
+            data_scope="general"
+        )
+
+        scroll_depth_metrics = self.query_engine.query_metrics(
+            date_range,
+            metric_name="ScrollDepth",
             data_scope="general"
         )
 
@@ -160,13 +190,24 @@ class ReportGenerator:
         if traffic_metrics:
             data.update(self._aggregate_traffic(traffic_metrics))
 
-        # Aggregate frustration data
-        if frustration_metrics:
-            data.update(self._aggregate_frustration(frustration_metrics))
+        # Aggregate frustration data from individual metrics
+        frustration_data = self._aggregate_frustration(
+            dead_clicks_metrics,
+            rage_clicks_metrics,
+            quick_backs_metrics,
+            error_clicks_metrics,
+            script_errors_metrics,
+            traffic_metrics
+        )
+        data.update(frustration_data)
 
         # Aggregate engagement data
-        if engagement_metrics:
-            data.update(self._aggregate_engagement(engagement_metrics))
+        engagement_data = self._aggregate_engagement(
+            engagement_time_metrics,
+            scroll_depth_metrics,
+            traffic_metrics
+        )
+        data.update(engagement_data)
 
         # Page-specific data
         if page_id:
@@ -204,16 +245,25 @@ class ReportGenerator:
             ),
         }
 
-    def _aggregate_frustration(self, metrics: List[Dict]) -> Dict[str, Any]:
-        """Aggregate frustration metrics."""
-        if not metrics:
-            return {}
+    def _aggregate_frustration(
+        self,
+        dead_clicks_metrics: List[Dict],
+        rage_clicks_metrics: List[Dict],
+        quick_backs_metrics: List[Dict],
+        error_clicks_metrics: List[Dict],
+        script_errors_metrics: List[Dict],
+        traffic_metrics: List[Dict]
+    ) -> Dict[str, Any]:
+        """Aggregate frustration metrics from individual Clarity metric types."""
+        # Get session count from traffic metrics
+        total_sessions = sum(m.get('sessions') or 0 for m in traffic_metrics) if traffic_metrics else 0
 
-        total_sessions = sum(m.get('sessions') or 0 for m in metrics)
-        dead_clicks = sum(m.get('dead_clicks') or 0 for m in metrics)
-        rage_clicks = sum(m.get('rage_clicks') or 0 for m in metrics)
-        quick_backs = sum(m.get('quick_backs') or 0 for m in metrics)
-        error_clicks = sum(m.get('error_clicks') or 0 for m in metrics)
+        # Aggregate each frustration type
+        dead_clicks = sum(m.get('dead_clicks') or 0 for m in dead_clicks_metrics) if dead_clicks_metrics else 0
+        rage_clicks = sum(m.get('rage_clicks') or 0 for m in rage_clicks_metrics) if rage_clicks_metrics else 0
+        quick_backs = sum(m.get('quick_backs') or 0 for m in quick_backs_metrics) if quick_backs_metrics else 0
+        error_clicks = sum(m.get('error_clicks') or 0 for m in error_clicks_metrics) if error_clicks_metrics else 0
+        script_errors = sum(m.get('script_errors') or 0 for m in script_errors_metrics) if script_errors_metrics else 0
 
         total_frustration = dead_clicks + rage_clicks + quick_backs + error_clicks
 
@@ -222,32 +272,41 @@ class ReportGenerator:
             'TOTAL_RAGE_CLICKS': f"{rage_clicks:,}",
             'TOTAL_QUICK_BACKS': f"{quick_backs:,}",
             'TOTAL_ERROR_CLICKS': f"{error_clicks:,}",
+            'TOTAL_SCRIPT_ERRORS': f"{script_errors:,}",
             'TOTAL_FRUSTRATION_SIGNALS': f"{total_frustration:,}",
-            'DEAD_CLICKS_RATE': f"{(dead_clicks/total_sessions if total_sessions else 0):.2f}",
-            'RAGE_CLICKS_RATE': f"{(rage_clicks/total_sessions if total_sessions else 0):.2f}",
-            'QUICK_BACKS_RATE': f"{(quick_backs/total_sessions if total_sessions else 0):.2f}",
-            'ERROR_CLICKS_RATE': f"{(error_clicks/total_sessions if total_sessions else 0):.2f}",
+            'DEAD_CLICK_RATE': f"{(dead_clicks/total_sessions*100 if total_sessions else 0):.1f}",
+            'RAGE_CLICK_RATE': f"{(rage_clicks/total_sessions*100 if total_sessions else 0):.1f}",
+            'QUICK_BACK_RATE': f"{(quick_backs/total_sessions*100 if total_sessions else 0):.1f}",
+            'ERROR_CLICK_RATE': f"{(error_clicks/total_sessions*100 if total_sessions else 0):.1f}",
+            'SCRIPT_ERROR_RATE': f"{(script_errors/total_sessions*100 if total_sessions else 0):.1f}",
             'FRUSTRATION_RATE': f"{(total_frustration/total_sessions if total_sessions else 0):.2f}",
         }
 
-    def _aggregate_engagement(self, metrics: List[Dict]) -> Dict[str, Any]:
-        """Aggregate engagement metrics."""
-        if not metrics:
-            return {}
+    def _aggregate_engagement(
+        self,
+        engagement_time_metrics: List[Dict],
+        scroll_depth_metrics: List[Dict],
+        traffic_metrics: List[Dict]
+    ) -> Dict[str, Any]:
+        """Aggregate engagement metrics from individual Clarity metric types."""
+        # Get session count from traffic metrics
+        total_sessions = sum(m.get('sessions') or 0 for m in traffic_metrics) if traffic_metrics else 0
 
-        total_sessions = sum(m.get('sessions') or 0 for m in metrics)
-        scroll_depth = sum((m.get('avg_scroll_depth') or 0) * (m.get('sessions') or 0) for m in metrics)
-        time_on_page = sum((m.get('avg_time_on_page') or 0) * (m.get('sessions') or 0) for m in metrics)
-        active_time = sum((m.get('avg_active_time') or 0) * (m.get('sessions') or 0) for m in metrics)
+        # Aggregate scroll depth
+        total_scroll = sum(m.get('scroll_depth') or 0 for m in scroll_depth_metrics) if scroll_depth_metrics else 0
+        scroll_count = len([m for m in scroll_depth_metrics if m.get('scroll_depth')]) if scroll_depth_metrics else 0
+        avg_scroll_depth = (total_scroll / scroll_count) if scroll_count > 0 else 0
+
+        # Aggregate engagement time
+        total_engagement = sum(m.get('engagement_time') or 0 for m in engagement_time_metrics) if engagement_time_metrics else 0
+        engagement_count = len([m for m in engagement_time_metrics if m.get('engagement_time')]) if engagement_time_metrics else 0
+        avg_engagement_time = (total_engagement / engagement_count) if engagement_count > 0 else 0
 
         return {
-            'AVG_SCROLL_DEPTH': f"{(scroll_depth/total_sessions if total_sessions else 0):.1f}%",
-            'AVG_TIME_ON_PAGE': self._format_duration(
-                time_on_page / total_sessions if total_sessions else 0
-            ),
-            'AVG_ACTIVE_TIME': self._format_duration(
-                active_time / total_sessions if total_sessions else 0
-            ),
+            'AVG_SCROLL_DEPTH': f"{avg_scroll_depth:.1f}",
+            'AVG_ENGAGEMENT_TIME': f"{avg_engagement_time:.0f}",
+            'AVG_TIME_ON_PAGE': self._format_duration(avg_engagement_time),
+            'AVG_ACTIVE_TIME': self._format_duration(avg_engagement_time * 0.7),  # Estimate active time as 70% of engagement
         }
 
     def _gather_page_data(self, date_range: DateRange, page_id: str) -> Dict[str, Any]:

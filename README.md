@@ -22,11 +22,44 @@ Stop guessing. Start knowing. This tool captures Microsoft Clarity analytics and
 
 ---
 
-## ⚡ Quick Start with Claude Code
+## ✨ What's New - Powerful Analysis Tools
+
+This project now includes a complete suite of professional analytics tools:
+
+**🎯 Unified CLI** - Single command interface for all operations
+- Query any time period with natural language ("last week", "November", "Q4 2025")
+- Instant system status and data overview
+- Smart aggregation and summarization
+
+**🤖 Claude Slash Commands** - 7 ready-to-use commands
+- `/query-data` - Query metrics with flexible dates
+- `/aggregate-metrics` - Summarize data over periods
+- `/system-status` - Check system health and data
+- Plus 4 more for fetching, maintenance, and reporting
+
+**📊 Advanced Analysis** - Professional statistical tools
+- **Period Comparison** - Compare week-over-week, month-over-month, any period to any period
+- **Trend Detection** - Statistical analysis with R², CAGR, pattern recognition
+- **Report Generation** - 7 professional templates with multi-audience insights
+- **Archive Management** - Automated data retention and cleanup
+
+**🗓️ Smart Date Parsing** - 30+ date formats supported
+- Natural: "7", "last-week", "yesterday"
+- Months: "November", "2025-11", "Nov 2024"
+- Quarters: "2025-Q4", "Q4 2025"
+- Custom: "2025-11-01 to 2025-11-30"
+
+[See all commands below](#-all-available-commands)
+
+---
+
+## ⚡ Quick Start - Choose Your Path
+
+### Path 1: Claude Code (Easiest 🌟)
 
 The easiest way to get started is using [Claude Code](https://claude.ai/code).
 
-### Step 1: Get Your Clarity API Token
+#### Step 1: Get Your Clarity API Token
 
 1. Go to https://clarity.microsoft.com/
 2. Click on your project
@@ -35,7 +68,7 @@ The easiest way to get started is using [Claude Code](https://claude.ai/code).
 5. Copy the token (starts with `eyJ...`)
 6. Also note your **Project ID** (in Settings)
 
-### Step 2: Clone This Repository with Claude Code
+#### Step 2: Clone This Repository with Claude Code
 
 1. Open Claude Code (desktop app or web)
 2. Tell Claude:
@@ -44,7 +77,7 @@ The easiest way to get started is using [Claude Code](https://claude.ai/code).
    ```
 3. Claude will clone it to your system
 
-### Step 3: Set Up Environment with Claude Code
+#### Step 3: Set Up Environment with Claude Code
 
 Tell Claude:
 ```
@@ -62,7 +95,7 @@ Claude will:
 - `CLARITY_API_TOKEN`: Your token from Step 1
 - `CLARITY_PROJECT_ID`: Your project ID from Step 1
 
-### Step 4: Install Dependencies with Claude Code
+#### Step 4: Install Dependencies with Claude Code
 
 Tell Claude:
 ```
@@ -71,7 +104,7 @@ Install the Python dependencies for this project
 
 Claude will run `pip install -r requirements.txt`
 
-### Step 5: Test the Setup with Claude Code
+#### Step 5: Test the Setup with Claude Code
 
 Tell Claude:
 ```
@@ -80,7 +113,7 @@ Test if the Clarity API configuration is working
 
 Claude will run `python config.py` and show you if everything is connected.
 
-### Step 6: Collect Your First Data with Claude Code
+#### Step 6: Collect Your First Data with Claude Code
 
 Tell Claude:
 ```
@@ -93,33 +126,54 @@ Claude will run `python fetch_clarity_data.py` and:
 - Save raw JSON files
 - Show you a summary
 
-### Step 7: Generate a Report with Claude Code
+#### Step 7: Use Claude Slash Commands (Optional - Even Easier!)
 
-Tell Claude:
+Once setup is complete, you can use slash commands directly:
 ```
-Generate a summary report of my Clarity data
+/system-status
+/query-data 7
+/aggregate-metrics last-week
 ```
-
-Claude will run `python generate_summary.py` and show you:
-- Total sessions and users
-- Device breakdown
-- Top countries
-- Frustration metrics (dead clicks, rage clicks)
-- CSV exports for further analysis
 
 ---
 
-## 🔧 Manual Setup (Without Claude Code)
+### Path 2: Unified CLI (Powerful 💪)
+
+After completing setup (Steps 1-5 above), use the modern CLI for powerful queries:
+
+```bash
+# Check system status and available data
+python clarity_cli.py status
+
+# Query last 7 days
+python clarity_cli.py query 7
+
+# Query with natural language dates
+python clarity_cli.py query "last week"
+python clarity_cli.py query November
+python clarity_cli.py query 2025-Q4
+
+# Aggregate and summarize
+python clarity_cli.py aggregate 30
+python clarity_cli.py aggregate-all
+
+# List available data
+python clarity_cli.py list --verbose
+```
+
+---
+
+### Path 3: Manual Setup (Advanced 🔧)
 
 If you prefer to set up manually:
 
-### 1. Clone the Repository
+#### 1. Clone the Repository
 ```bash
 git clone https://github.com/parhumm/clarity-ux-insights.git
 cd clarity-ux-insights
 ```
 
-### 2. Configure Environment
+#### 2. Configure Environment
 ```bash
 # Copy example file
 cp .env.example .env
@@ -134,24 +188,247 @@ CLARITY_API_TOKEN=your_token_here
 CLARITY_PROJECT_ID=your_project_id
 ```
 
-### 3. Install Dependencies
+#### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Test Configuration
+#### 4. Test Configuration
 ```bash
 python config.py
 ```
 
-### 5. Fetch Data
+#### 5. Fetch Data
 ```bash
 python fetch_clarity_data.py
 ```
 
-### 6. Generate Report
+#### 6. Start Analyzing
 ```bash
+# Use the unified CLI
+python clarity_cli.py status
+
+# Or use individual scripts
 python generate_summary.py
+```
+
+---
+
+## 🎯 All Available Commands
+
+### Unified CLI Commands (Recommended)
+
+The modern interface for all operations:
+
+#### Query Command
+```bash
+# Query data with flexible date expressions
+python clarity_cli.py query <date_range> [options]
+
+# Examples:
+python clarity_cli.py query 7                    # Last 7 days
+python clarity_cli.py query "last week"          # Previous week
+python clarity_cli.py query November             # Entire month
+python clarity_cli.py query 2025-Q4              # Quarter
+python clarity_cli.py query "2025-11-01 to 2025-11-30"  # Custom range
+
+# Options:
+--metric METRIC          # Filter by metric name (default: Traffic)
+--scope {general,page}   # Data scope
+--page PAGE_ID           # Specific page ID
+--count-only             # Only show count
+```
+
+#### Aggregate Command
+```bash
+# Aggregate metrics over a period
+python clarity_cli.py aggregate <date_range> [options]
+
+# Examples:
+python clarity_cli.py aggregate 30               # Last 30 days summary
+python clarity_cli.py aggregate "last month"     # Previous month
+python clarity_cli.py aggregate 2025-Q3          # Quarter summary
+
+# Shows: total, average, min, max for all metrics
+```
+
+#### Aggregate-All Command
+```bash
+# Aggregate all available data into weekly/monthly summaries
+python clarity_cli.py aggregate-all [--force]
+
+# Creates pre-calculated summaries for faster queries
+# Use --force to recalculate existing summaries
+```
+
+#### List Command
+```bash
+# List available data dates
+python clarity_cli.py list [options]
+
+# Options:
+--scope {general,page}   # Data scope
+--verbose, -v            # Show all dates (not just range)
+```
+
+#### Status Command
+```bash
+# Show complete system status
+python clarity_cli.py status
+
+# Shows:
+# - Project configuration
+# - Database metrics count (daily/weekly/monthly)
+# - Date range of available data
+# - Tracked pages
+# - Configuration settings
+```
+
+### Claude Slash Commands
+
+Use these directly in Claude Code:
+
+#### Analysis Commands
+```
+/query-data <date_range>
+# Query metrics with flexible date expressions
+# Example: /query-data 7
+# Example: /query-data last-week
+
+/aggregate-metrics <date_range>
+# Summarize data over a period with statistics
+# Example: /aggregate-metrics 30
+# Example: /aggregate-metrics November
+
+/system-status
+# Show system health, data counts, configuration
+```
+
+#### Fetch Commands
+```
+/fetch-clarity-data
+# Fetch latest data from Microsoft Clarity API
+# Stores in database and creates JSON backups
+```
+
+#### Maintenance Commands
+```
+/aggregate-all [--force]
+# Create weekly/monthly summaries from daily data
+# Use --force to recalculate existing summaries
+
+/list-data [--scope general|page] [--verbose]
+# List all available data dates
+# Shows date range and data counts
+```
+
+#### Reports Commands
+```
+/generate-summary <date_range>
+# Generate comprehensive summary report (coming soon)
+# Will use report generator with templates
+```
+
+### Advanced Analysis Scripts
+
+Professional analysis tools for deep insights:
+
+#### Report Generator
+```bash
+# Generate reports from templates
+python scripts/report_generator.py <template> <date_range> [options]
+
+# Templates:
+# - ux-health             # Overall UX health report
+# - frustration-analysis  # Frustration signals deep dive
+# - device-performance    # Mobile/Desktop/Tablet comparison
+# - geographic-insights   # Global reach and top markets
+# - content-performance   # Page and category analysis
+# - engagement-analysis   # Time, scroll, behavior metrics
+# - page-analysis         # Single page deep dive (use --page)
+
+# Examples:
+python scripts/report_generator.py ux-health "last 7 days"
+python scripts/report_generator.py frustration-analysis November
+python scripts/report_generator.py page-analysis 30 --page /checkout
+
+# Output: Markdown reports in reports/ directory
+```
+
+#### Period Comparator
+```bash
+# Compare two time periods
+python scripts/comparator.py <period1> [period2] [options]
+
+# Examples:
+python scripts/comparator.py "last week"         # Auto-compares to previous week
+python scripts/comparator.py 7                   # Last 7 days vs previous 7 days
+python scripts/comparator.py November October    # Month-over-month
+python scripts/comparator.py 2025-Q4 2025-Q3     # Quarter-over-quarter
+
+# Shows:
+# - Key metrics comparison (sessions, users, pageviews)
+# - Improvements (positive changes)
+# - Regressions (negative changes)
+# - Overall trend (↑/↓/→)
+```
+
+#### Trend Analyzer
+```bash
+# Analyze long-term trends with statistics
+python scripts/trend_analyzer.py <date_range> [options]
+
+# Examples:
+python scripts/trend_analyzer.py 30              # Last 30 days trend
+python scripts/trend_analyzer.py "last month"    # Previous month
+python scripts/trend_analyzer.py 2025            # Entire year
+python scripts/trend_analyzer.py 90              # 90-day trend
+
+# Shows:
+# - Overall metrics (totals, averages, max/min)
+# - Growth analysis (%, CAGR, daily average)
+# - Volatility analysis (stability, coefficient of variation)
+# - Trend detection (increasing/decreasing/stable with R²)
+# - Pattern analysis (peaks, valleys, weekly cycles)
+```
+
+#### Archive Manager
+```bash
+# Manage data retention and archiving
+python scripts/archive_manager.py <command> [options]
+
+# Commands:
+python scripts/archive_manager.py check          # Check for old data
+python scripts/archive_manager.py archive [--format json|csv] [--dry-run]
+python scripts/archive_manager.py delete [--dry-run]
+python scripts/archive_manager.py cleanup [--dry-run]  # Archive + delete
+python scripts/archive_manager.py list           # List archive files
+python scripts/archive_manager.py restore <file> [--dry-run]
+
+# Examples:
+python scripts/archive_manager.py check
+python scripts/archive_manager.py cleanup --dry-run  # See what would happen
+python scripts/archive_manager.py cleanup            # Actually archive and delete
+python scripts/archive_manager.py list
+python scripts/archive_manager.py restore archive/archive_2025-10-15.json
+```
+
+### Legacy Scripts (Still Supported)
+
+Original scripts that still work:
+
+```bash
+# Fetch data from Clarity API
+python fetch_clarity_data.py
+
+# Generate summary reports
+python generate_summary.py
+
+# Test configuration
+python config.py
+
+# Validate data
+python validate_data.py
 ```
 
 ---
@@ -189,14 +466,77 @@ python generate_summary.py
 ```bash
 # Set up a daily cron job to collect data
 0 2 * * * cd /path/to/clarity-ux-insights && python fetch_clarity_data.py
+
+# Weekly cleanup (archive old data beyond retention period)
+0 3 * * 0 cd /path/to/clarity-ux-insights && python scripts/archive_manager.py cleanup
 ```
 
-### Analyze Specific Issues
+### Quick Data Checks
+```bash
+# Check system status and available data
+python clarity_cli.py status
+
+# Query last 7 days
+python clarity_cli.py query 7
+
+# Or use Claude Code:
+/system-status
+/query-data 7
+```
+
+### Compare Time Periods
+```bash
+# Week-over-week comparison
+python scripts/comparator.py "last week"
+
+# Month-over-month
+python scripts/comparator.py November October
+
+# This quarter vs last quarter
+python scripts/comparator.py 2025-Q4 2025-Q3
+
+# Or via Claude Code:
+Tell Claude: "Compare this week's metrics to last week"
+```
+
+### Analyze Trends
+```bash
+# 30-day trend analysis
+python scripts/trend_analyzer.py 30
+
+# Quarterly trend
+python scripts/trend_analyzer.py 2025-Q4
+
+# Full year analysis
+python scripts/trend_analyzer.py 2025
+
+# Shows: growth rate, CAGR, volatility, trend direction, patterns
+```
+
+### Generate Professional Reports
+```bash
+# UX health report for last 7 days
+python scripts/report_generator.py ux-health 7
+
+# Frustration analysis for November
+python scripts/report_generator.py frustration-analysis November
+
+# Device performance comparison
+python scripts/report_generator.py device-performance 30
+
+# Page-specific analysis
+python scripts/report_generator.py page-analysis 30 --page /checkout
+
+# Reports saved to reports/ directory as markdown files
+```
+
+### Analyze Specific Issues with Claude
 ```bash
 # Use Claude Code to analyze
 Tell Claude: "Show me the devices with the highest frustration rates"
 Tell Claude: "Which countries have the most dead clicks?"
 Tell Claude: "Compare mobile vs desktop engagement"
+Tell Claude: "What's the trend in rage clicks over the last month?"
 ```
 
 ### Export for Presentations
@@ -204,25 +544,25 @@ Tell Claude: "Compare mobile vs desktop engagement"
 # Generate CSV files
 python generate_summary.py
 
-# Files saved to data/exports/
-# - summary_last_3_days.csv
-# - device_summary.csv
-# - country_summary.csv
-# - browser_summary.csv
+# Or archive data in CSV format
+python scripts/archive_manager.py archive --format csv
+
+# Files saved to data/exports/ or archive/ directory
 ```
 
 ### Query the Database
 ```python
-from database.db_manager import DatabaseManager
+from scripts.query_engine import QueryEngine, DateParser
 
-db = DatabaseManager()
+engine = QueryEngine()
 
-# Get all mobile metrics
-mobile_metrics = db.get_metrics(dimension1="Device", dimension1_value="Mobile")
+# Query last 7 days
+date_range = DateParser.parse("7")
+metrics = engine.query_metrics(date_range)
 
-# Get statistics
-stats = db.get_statistics()
-print(f"Total records: {stats['total_metrics']}")
+# Aggregate over a period
+summary = engine.aggregate_metrics(date_range, metric_name="Traffic")
+print(f"Total sessions: {summary['sum_sessions']}")
 ```
 
 ---
@@ -232,19 +572,25 @@ print(f"Total records: {stats['total_metrics']}")
 **Quick Start:**
 - [Quick Start Guide](docs/QUICK-START.md) - Get started in 5 minutes
 - [Complete System Overview](docs/README-SUMMARY.md) - Architecture and features
-- [Date Format Reference](docs/DATE-FORMATS.md) - All supported date expressions
+- [Date Format Reference](docs/DATE-FORMATS.md) - All 30+ supported date expressions
 
-**Quick References:**
-- [API Features & Limitations](docs/features_and_limitations.md) - What you can and can't do with the API
+**Command References:**
+- [All Commands](#-all-available-commands) - Complete command reference (above)
+- [Unified CLI](#unified-cli-commands-recommended) - Modern interface commands
+- [Claude Commands](#claude-slash-commands) - Slash commands for Claude Code
+- [Advanced Tools](#advanced-analysis-scripts) - Professional analysis scripts
+
+**Analysis Guides:**
 - [Insights Guide](docs/clarity_insights_analysis.md) - Comprehensive analysis guide for UX/PM
 - [Quick Reference](docs/clarity_quick_reference.md) - At-a-glance metrics and actions
+- [API Features & Limitations](docs/features_and_limitations.md) - What you can and can't do
 
-**Detailed Documentation:**
+**Technical Documentation:**
 - [Implementation Plan](implementation_plan.md) - Full technical implementation details
 - [API Research](api_research.md) - Complete Clarity API research and capabilities
 - [SECURITY.md](SECURITY.md) - Security guidelines and best practices
 
-**Examples:**
+**Configuration Examples:**
 - [E-commerce Configuration](examples/ecommerce-config.yaml)
 - [SaaS Platform Configuration](examples/saas-config.yaml)
 - [Media/Streaming Configuration](examples/media-streaming-config.yaml)
@@ -313,23 +659,72 @@ This project is open source. Feel free to use and modify for your needs.
 
 ## 🆘 Troubleshooting
 
+### Quick System Check
+```bash
+# Check everything at once (RECOMMENDED FIRST STEP)
+python clarity_cli.py status
+
+# Or use Claude Code:
+/system-status
+```
+
+This shows:
+- Project configuration
+- Database health
+- Available data range
+- Any configuration issues
+
 ### API Connection Issues
 ```bash
 # Test your connection
-python clarity_client.py
+python config.py
 
 # Check your token in .env file
 cat .env | grep CLARITY_API_TOKEN
+
+# Or check status
+python clarity_cli.py status
 ```
 
 ### Database Issues
 ```bash
+# Check database stats
+python clarity_cli.py status
+
+# List available data
+python clarity_cli.py list --verbose
+
 # Validate your data
 python validate_data.py
 
-# Re-initialize database if needed
-rm data/clarity_data.db
+# Re-initialize database if needed (CAUTION: This deletes data)
+rm database/clarity_data.db
 python fetch_clarity_data.py
+```
+
+### "No Data Found" Errors
+```bash
+# Check what data you have
+python clarity_cli.py list
+
+# Check date range
+python clarity_cli.py status
+
+# The date range might be outside your available data
+# Try: python clarity_cli.py query 3  (for last 3 days)
+```
+
+### Date Format Not Recognized
+```bash
+# See all supported formats
+cat docs/DATE-FORMATS.md
+
+# Common formats that work:
+# - Numbers: 7, 30, 90
+# - Relative: yesterday, last-week, last-month
+# - Months: November, 2025-11
+# - Quarters: 2025-Q4, Q4 2025
+# - Custom: "2025-11-01 to 2025-11-30"
 ```
 
 ### Using Claude Code for Help
@@ -340,6 +735,13 @@ I'm getting an error with the Clarity API project
 ```
 
 Then paste the error message. Claude can help debug and fix most issues.
+
+Or try specific commands:
+```
+/system-status                    # Check system health
+/list-data --verbose              # Show all available data
+Tell Claude: "Help me debug this error: [paste error]"
+```
 
 ---
 

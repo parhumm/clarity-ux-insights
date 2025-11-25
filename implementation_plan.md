@@ -833,13 +833,13 @@ Every Monday 08:00 UTC - Weekly report generation
 crontab -e
 
 # Add daily collection at 1 AM UTC
-0 1 * * * cd /path/to/clarity_api && /usr/bin/python3 scheduler/daily_run.py
+0 1 * * * cd /path/to/clarity-ux-insights && /usr/bin/python3 scheduler/daily_run.py
 
 # Add weekly report every Monday at 8 AM UTC
-0 8 * * 1 cd /path/to/clarity_api && /usr/bin/python3 scheduler/weekly_report.py
+0 8 * * 1 cd /path/to/clarity-ux-insights && /usr/bin/python3 scheduler/weekly_report.py
 
 # Add monthly report on 1st of month at 8 AM UTC
-0 8 1 * * cd /path/to/clarity_api && /usr/bin/python3 scheduler/monthly_report.py
+0 8 1 * * cd /path/to/clarity-ux-insights && /usr/bin/python3 scheduler/monthly_report.py
 ```
 
 **Option 2: Windows Task Scheduler**
@@ -916,7 +916,7 @@ openpyxl==3.1.2          # Excel export
 ### File Structure
 
 ```
-clarity_api/
+clarity-ux-insights/
 ├── .env                          # Environment variables (API token, config)
 ├── .gitignore                    # Git ignore (exclude .env, database, etc.)
 ├── README.md                     # Project documentation
@@ -989,8 +989,8 @@ clarity_api/
 **1. Initial Setup:**
 ```bash
 # Clone/create project
-mkdir clarity_api
-cd clarity_api
+mkdir clarity-ux-insights
+cd clarity-ux-insights
 
 # Create virtual environment
 python3 -m venv venv

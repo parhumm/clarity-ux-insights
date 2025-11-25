@@ -1042,8 +1042,8 @@ Since direct filtering isn't available:
 - **JavaScript API:** https://docs.microsoft.com/en-us/clarity/setup-and-installation/javascript-api
 
 ### Internal Project Files
-- **Implementation Plan:** `/clarity_api_implementation_plan.md`
-- **Research Notes:** `/clarity_api_research.md`
+- **Implementation Plan:** `/implementation_plan.md`
+- **Research Notes:** `/api_research.md`
 - **Client Code:** `/clarity_client.py`
 - **Data Fetching:** `/fetch_clarity_data.py`
 - **Database Schema:** `/database/schema.sql`

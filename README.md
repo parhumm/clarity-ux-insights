@@ -1,24 +1,24 @@
-# Microsoft Clarity Data Analytics
+# Clarity UX Insights
 
-Automatically collect and analyze user behavior data from Microsoft Clarity to make better UX and product decisions.
+Transform user behavior into actionable insights. Automatically collect, analyze, and preserve Microsoft Clarity analytics data to discover what users really experience on your site.
 
-## 🎯 What This Does
+## 🎯 What You'll Discover
 
-This tool fetches analytics data from Microsoft Clarity's API and stores it locally, giving you:
+Stop guessing. Start knowing. This tool captures Microsoft Clarity analytics and preserves it forever, revealing:
 
 **For UX Researchers:**
-- Identify frustration points (dead clicks, rage clicks, quick backs)
-- Track scroll behavior and engagement patterns
-- Compare user experience across devices and browsers
-- Spot usability issues with real data
+- **Uncover frustration patterns** - See exactly where users rage click, encounter dead clicks, or quickly abandon
+- **Reveal engagement insights** - Discover how users actually scroll, navigate, and interact with your design
+- **Compare experiences** - Identify device- and browser-specific usability issues with real behavioral data
+- **Validate design decisions** - Replace assumptions with evidence from actual user sessions
 
 **For Product Managers:**
-- Monitor product health metrics daily
-- Track feature adoption and user engagement
-- Prioritize fixes based on user impact
-- Make data-driven roadmap decisions
+- **Track product health** - Monitor daily metrics that show how your product is really performing
+- **Measure feature impact** - See which features users adopt and which they ignore
+- **Prioritize confidently** - Fix what hurts users most, backed by frustration and engagement data
+- **Build smarter roadmaps** - Make strategic decisions based on long-term trends, not gut feelings
 
-**Key Benefit:** Microsoft Clarity's API only keeps 3 days of data. This tool collects it daily and stores it locally, so you can track trends over weeks and months.
+**Critical Advantage:** Microsoft Clarity's API only retains 3 days of data. This tool automatically collects it daily and preserves it indefinitely, letting you analyze trends across weeks, months, and product cycles.
 
 ---
 
@@ -40,7 +40,7 @@ The easiest way to get started is using [Claude Code](https://claude.ai/code).
 1. Open Claude Code (desktop app or web)
 2. Tell Claude:
    ```
-   Clone this repository: https://github.com/YOUR_USERNAME/clarity_api
+   Clone this repository: https://github.com/parhumm/clarity-ux-insights
    ```
 3. Claude will clone it to your system
 
@@ -115,8 +115,8 @@ If you prefer to set up manually:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/clarity_api.git
-cd clarity_api
+git clone https://github.com/parhumm/clarity-ux-insights.git
+cd clarity-ux-insights
 ```
 
 ### 2. Configure Environment
@@ -156,29 +156,30 @@ python generate_summary.py
 
 ---
 
-## 📊 What Data Gets Collected
+## 📊 Insights You'll Capture
 
-**User Behavior:**
-- Sessions, unique users, bot traffic
-- Pages per session, engagement time
-- Scroll depth, navigation patterns
+**Behavioral Patterns:**
+- Session flows, unique visitor trends, bot vs. human traffic
+- Engagement depth (pages per session, time spent)
+- Scroll behavior and content consumption patterns
+- Navigation paths that reveal user intent
 
-**Frustration Signals:**
-- Dead clicks (clicking non-interactive elements)
-- Rage clicks (rapid repeated clicking)
-- Quick backs (immediate exits)
-- JavaScript errors
+**Frustration Signals (Your UX Red Flags):**
+- **Dead clicks** - Users clicking on elements they expect to be interactive
+- **Rage clicks** - Rapid, frustrated clicking indicating broken functionality
+- **Quick backs** - Users immediately abandoning pages (high bounce indicators)
+- **JavaScript errors** - Technical issues disrupting user experience
 
-**Segmentation:**
-- Device type (Mobile, Desktop, Tablet)
-- Browser (Chrome, Safari, Firefox, etc.)
-- Country (geographic distribution)
-- Cross-segmentation (e.g., Germany + Mobile users)
+**Audience Segmentation:**
+- Device breakdown (Mobile, Desktop, Tablet)
+- Browser analysis (Chrome, Safari, Firefox, Edge)
+- Geographic insights (Country-level distribution)
+- Cross-dimensional patterns (e.g., Mobile users in Germany vs. Desktop users in US)
 
-All data is stored in:
-- SQLite database (`data/clarity_data.db`)
-- Raw JSON files (`data/raw/`)
-- CSV exports (`data/exports/`)
+**Data Storage (All Local, All Yours):**
+- SQLite database for fast querying (`data/clarity_data.db`)
+- Raw JSON archives for deep analysis (`data/raw/`)
+- Ready-to-use CSV exports (`data/exports/`)
 
 ---
 
@@ -187,7 +188,7 @@ All data is stored in:
 ### Daily Monitoring
 ```bash
 # Set up a daily cron job to collect data
-0 2 * * * cd /path/to/clarity_api && python fetch_clarity_data.py
+0 2 * * * cd /path/to/clarity-ux-insights && python fetch_clarity_data.py
 ```
 
 ### Analyze Specific Issues
@@ -229,13 +230,13 @@ print(f"Total records: {stats['total_metrics']}")
 ## 📚 Documentation
 
 **Quick References:**
-- [API Features & Limitations](docs/clarity_api_features_and_limitations.md) - What you can and can't do with the API
+- [API Features & Limitations](docs/features_and_limitations.md) - What you can and can't do with the API
 - [Insights Guide](docs/clarity_insights_analysis.md) - Comprehensive analysis guide for UX/PM
 - [Quick Reference](docs/clarity_quick_reference.md) - At-a-glance metrics and actions
 
 **Detailed Documentation:**
-- [Implementation Plan](clarity_api_implementation_plan.md) - Full technical implementation details
-- [API Research](clarity_api_research.md) - Complete Clarity API research and capabilities
+- [Implementation Plan](implementation_plan.md) - Full technical implementation details
+- [API Research](api_research.md) - Complete Clarity API research and capabilities
 - [SECURITY.md](SECURITY.md) - Security guidelines and best practices
 
 ---
@@ -256,23 +257,23 @@ See [SECURITY.md](SECURITY.md) for complete security guidelines.
 
 ---
 
-## 🚀 Benefits Summary
+## 🚀 Why This Matters
 
-**Why use this tool?**
+**Turn ephemeral data into lasting insights:**
 
-1. **Historical Tracking:** Clarity API only gives you 3 days of data. This tool stores it forever.
+1. **Preserve Your History** - Clarity's API discards data after 3 days. This tool captures and preserves it indefinitely, building a historical record you can analyze across product cycles.
 
-2. **Automation:** Set it and forget it - daily collection with cron jobs.
+2. **Automate Intelligence Gathering** - Set up once, collect forever. Daily cron jobs capture insights while you sleep, building a comprehensive behavioral dataset.
 
-3. **Flexible Analysis:** Query your own database, export to CSV, build custom reports.
+3. **Analyze Without Limits** - Query, slice, export, and explore your data endlessly. No API rate limits, no restrictions. It's your data, stored locally.
 
-4. **No Rate Limits:** Once collected, analyze as much as you want without API limits.
+4. **Spot Trends That Matter** - Compare week-over-week patterns, track month-over-month improvements, measure the impact of releases and design changes.
 
-5. **Trend Analysis:** Compare week-over-week, month-over-month, track improvements.
+5. **Make Evidence-Based Decisions** - Replace opinions with observations. Replace assumptions with real user behavior data. Know what's working and what's frustrating users.
 
-6. **Better Decisions:** Real data about user frustration, engagement, and behavior patterns.
+6. **Build Custom Insights** - Export to CSV for presentations, query the database for specific patterns, or build custom dashboards that answer your unique questions.
 
-7. **Claude Code Integration:** Use AI to help you analyze, query, and understand your data.
+7. **Leverage AI Analysis** - Claude Code integration lets you ask natural language questions about your data and get instant insights without writing SQL.
 
 ---
 

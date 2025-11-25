@@ -9,9 +9,10 @@
 1. [Unified CLI Commands](#unified-cli-commands)
 2. [Claude Slash Commands](#claude-slash-commands)
 3. [Advanced Analysis Scripts](#advanced-analysis-scripts)
-4. [Legacy Scripts](#legacy-scripts)
-5. [Date Format Reference](#date-format-reference)
-6. [Common Examples](#common-examples)
+4. [Utility Scripts](#utility-scripts)
+5. [Legacy Scripts](#legacy-scripts)
+6. [Date Format Reference](#date-format-reference)
+7. [Common Examples](#common-examples)
 
 ---
 
@@ -733,6 +734,156 @@ python scripts/archive_manager.py restore archive/archive_2025-10-25.json --dry-
 ✓ Restored 1,234 records
 Skipped 0 duplicates
 ```
+
+---
+
+## Utility Scripts
+
+**Location:** `scripts/` directory
+**Purpose:** Data management and maintenance utilities
+
+### cleanup_all_data.py - Clean All Data
+
+**Syntax:**
+```bash
+python scripts/cleanup_all_data.py
+```
+
+**What It Does:**
+- Deletes all records from all database tables
+- Removes all raw JSON files from `data/raw/`
+- Removes all generated reports from `reports/`
+- Preserves database backups
+- Prompts for confirmation before deletion
+
+**Use Cases:**
+- Fresh start with new data
+- Reset testing environment
+- Clear corrupted data
+- Prepare for data re-import
+
+**Safety Features:**
+- Interactive confirmation required (type `yes`)
+- Database backups are NOT deleted
+- Shows summary of what will be deleted
+- Provides detailed feedback during cleanup
+
+**Example Session:**
+```bash
+$ python scripts/cleanup_all_data.py
+
+============================================================
+🧹 TELEVIK DATA CLEANUP
+============================================================
+
+⚠️  WARNING: This will delete ALL data and reports!
+  - All database records
+  - All raw JSON files
+  - All generated reports
+
+Are you sure you want to continue? (yes/no): yes
+
+🚀 Starting cleanup...
+
+🗄️  Cleaning up database...
+  ✓ Deleted 3386 records from daily_metrics
+  ✓ Deleted 4 records from weekly_metrics
+  ✓ Deleted 6 records from monthly_metrics
+  ✓ Database cleanup complete
+
+📁 Cleaning up raw JSON files...
+  ✓ Deleted 6 raw JSON files
+
+📊 Cleaning up generated reports...
+  ✓ Deleted 14 total reports
+
+============================================================
+✅ CLEANUP COMPLETE
+============================================================
+```
+
+**Note:** This is a destructive operation. Ensure you have backups if you need to preserve data.
+
+---
+
+### fetch_7days.py - Fetch Latest Data
+
+**Syntax:**
+```bash
+python scripts/fetch_7days.py
+```
+
+**What It Does:**
+- Wrapper around `fetch_clarity_data.py`
+- Fetches maximum available data from Clarity API (last 3 days)
+- Stores data in database with duplicate prevention
+- Creates JSON backups in `data/raw/`
+- Logs all API requests in `fetch_log` table
+
+**API Limitation Notice:**
+Microsoft Clarity's "project-live-insights" API endpoint only supports fetching the last 1-3 days of data. To accumulate 7 days of historical data, this script needs to be run daily over a week.
+
+**Features:**
+- Fetches all 6 dimension breakdowns:
+  - Base metrics (no dimensions)
+  - Device breakdown (Mobile, Desktop, Tablet)
+  - Country breakdown
+  - Browser breakdown
+  - Device + Browser combinations
+  - Country + Device combinations
+- Automatic retry with exponential backoff
+- Rate limit handling (waits 60 seconds when hit)
+- Duplicate detection and prevention
+
+**Example Output:**
+```bash
+$ python scripts/fetch_7days.py
+
+============================================================
+FETCHING TELEVIK DATA
+============================================================
+⚠️  API Limitation: Clarity API only provides last 3 days
+   For 7-day historical data, the fetch needs to run daily
+   over a week to accumulate the data.
+============================================================
+
+📥 Fetching maximum available data (last 3 days)...
+
+============================================================
+CLARITY DATA COLLECTION - FULL RUN
+============================================================
+Project: televika
+Fetching last 3 days of data
+API calls planned: 6
+============================================================
+
+[1/6] Base Metrics
+📊 Received 3 metric groups, 90 total rows
+💾 Inserted 90 new records into database
+✅ Success!
+
+[2/6] Device Breakdown
+📊 Received 3 metric groups, 270 total rows
+💾 Inserted 270 new records into database
+✅ Success!
+
+...
+
+============================================================
+DATA COLLECTION COMPLETE
+============================================================
+✅ Successful: 6/6
+❌ Failed: 0/6
+
+📊 DATABASE STATISTICS:
+   Total metrics: 3,386
+   Latest fetch: 2025-11-25 12:00:00
+```
+
+**Troubleshooting:**
+- **Rate Limits:** If you see "⚠️ Rate limit hit", the script will automatically wait and retry
+- **Token Expired:** Update `CLARITY_API_TOKEN` in `.env` file with a fresh token
+- **No Data:** Ensure project has recent activity in Microsoft Clarity
 
 ---
 

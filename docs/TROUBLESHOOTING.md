@@ -52,6 +52,110 @@ python clarity_cli.py status
 
 ---
 
+## API Rate Limiting
+
+### Symptoms
+- "⚠️ Rate limit hit"
+- "HTTP 429" errors
+- Fetch script waiting 60 seconds repeatedly
+- All API requests failing after several attempts
+
+### What's Happening
+Microsoft Clarity API has rate limits to prevent abuse. When you hit the limit:
+- The API returns HTTP 429 (Too Many Requests)
+- The script automatically waits 60 seconds before retrying
+- After 3 retries, the request fails
+- Rate limits are tied to your Clarity account, not IP address
+
+### Solutions
+
+**Option 1: Wait it Out (Recommended)**
+```bash
+# The script handles rate limits automatically
+# Just let it run - it will wait and retry
+python fetch_clarity_data.py
+
+# You'll see:
+# ⚠️  Rate limit hit. Waiting 60 seconds...
+# This is normal - the script is handling it for you
+```
+
+**Option 2: Retry Later**
+```bash
+# If all fetches fail, wait a few hours and try again
+# Rate limits typically reset:
+# - Hourly (most common)
+# - Daily (for heavy usage)
+# - Per request count
+
+# Check when you can try again:
+python clarity_cli.py status
+# Look at "Latest fetch" to see when last successful fetch occurred
+```
+
+**Option 3: Generate New API Token**
+```bash
+# Sometimes a fresh token helps
+# 1. Go to Clarity Settings → API → Data Export API
+# 2. Generate new token
+# 3. Update .env file with new token
+# 4. Try fetching again
+```
+
+### Prevention Tips
+
+1. **Don't fetch too frequently**: Wait at least 1 hour between fetch attempts
+2. **Schedule fetches**: Run once per day at the same time
+3. **Avoid multiple simultaneous fetches**: Only run one fetch script at a time
+4. **Monitor fetch logs**: Check `fetch_log` table in database to see request history
+
+```bash
+# Check your fetch history
+sqlite3 data/clarity_data.db "SELECT * FROM fetch_log ORDER BY fetch_timestamp DESC LIMIT 10;"
+```
+
+### Understanding Rate Limits
+
+**Microsoft Clarity API Limits:**
+- **Max requests per day**: ~10 (as per config)
+- **Max days per request**: 3
+- **Cooldown period**: ~60 seconds between requests
+- **Daily reset**: Varies by account
+
+**Why So Restrictive?**
+Clarity is a free service, and the API is designed for periodic data collection, not high-frequency polling.
+
+### Best Practices
+
+1. **Daily Schedule**: Set up a cron job or scheduled task to run once per day:
+   ```bash
+   # Example cron (runs at 2 AM daily)
+   0 2 * * * cd /path/to/clarity_api && python fetch_clarity_data.py
+   ```
+
+2. **Monitor, Don't Poll**: Check data once daily, not multiple times per hour
+
+3. **Use Existing Data**: Query your database instead of re-fetching:
+   ```bash
+   python clarity_cli.py query 7
+   python clarity_cli.py aggregate 30
+   ```
+
+4. **Archive Old Data**: Keep database lean to improve performance:
+   ```bash
+   python scripts/archive_manager.py cleanup
+   ```
+
+### When to Contact Support
+
+If you experience persistent rate limiting:
+1. Verify you're not running multiple fetch scripts
+2. Check if someone else has access to your API token
+3. Review the [Microsoft Clarity API documentation](https://learn.microsoft.com/en-us/clarity/)
+4. Contact Microsoft Clarity support if limits seem too restrictive for your use case
+
+---
+
 ## Database Issues
 
 ### Symptoms

@@ -286,6 +286,14 @@ Found a bug? Have a feature request?
 
 ---
 
+## 👨‍💻 Author
+
+Created by **[Parhum Khoshbakht](https://www.linkedin.com/in/parhumm/)**
+
+Connect on LinkedIn for questions, feedback, or collaboration opportunities.
+
+---
+
 ## 📄 License
 
 This project is open source. Feel free to use and modify for your needs.

@@ -827,6 +827,23 @@ class ReportGenerator:
             'SCROLL_ISSUE_PCT': "0.0",
             # General recommendations placeholder
             'RECOMMENDATIONS': self._generate_recommendations(data, dead_click_rate, rage_click_rate, quick_back_rate),
+            # Frustration-analysis template specific placeholders
+            'TECHNICAL_CAUSE_1': "UI elements styled as interactive but non-functional (dead clicks)",
+            'TECHNICAL_CAUSE_2': "Slow response times causing rage clicks",
+            'TECHNICAL_CAUSE_3': "Poor page load performance triggering quick backs",
+            'TECHNICAL_FIX_1': "Audit and fix clickability affordances (cursor feedback, hover states)",
+            'TECHNICAL_FIX_2': "Add loading indicators and optimize async operations",
+            'TECHNICAL_FIX_3': "Improve page load performance (<2s target)",
+            'UX_ISSUE_1': f"Dead clicks affecting {dead_click_rate:.1f}% of sessions",
+            'UX_ISSUE_2': f"Rage clicks indicating broken interactions ({rage_click_rate:.1f}% of sessions)",
+            'UX_ISSUE_3': f"High quick back rate ({quick_back_rate:.1f}%) suggesting poor landing UX",
+            'UX_IMPROVEMENT_1': "Review visual design for misleading clickable elements",
+            'UX_IMPROVEMENT_2': "Add clear feedback for all interactive elements",
+            'UX_IMPROVEMENT_3': "Align landing page content with user expectations",
+            'MARKETING_REC_1': "Audit ad copy and meta descriptions for accuracy",
+            'MARKETING_REC_2': "Focus acquisition on lower-frustration traffic sources",
+            'IMMEDIATE_ACTION_1': f"Fix top dead click issues affecting {int(dead_clicks):,} incidents",
+            'IMMEDIATE_ACTION_2': f"Investigate rage click triggers across {rage_click_sessions:,} sessions",
         }
 
         for key, value in insights.items():

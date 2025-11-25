@@ -224,6 +224,7 @@ class ReportGenerator:
         total_sessions = sum(m.get('sessions') or 0 for m in metrics)
         total_users = sum(m.get('users') or 0 for m in metrics)
         total_page_views = sum(m.get('page_views') or 0 for m in metrics)
+        bot_sessions = sum(m.get('bot_sessions') or 0 for m in metrics)
 
         # Device breakdown
         mobile = sum(m.get('mobile_sessions') or 0 for m in metrics)
@@ -232,14 +233,17 @@ class ReportGenerator:
 
         return {
             'TOTAL_SESSIONS': f"{total_sessions:,}",
-            'TOTAL_USERS': f"{total_users:,}",
+            'UNIQUE_USERS': f"{total_users:,}",  # Renamed from TOTAL_USERS
+            'TOTAL_USERS': f"{total_users:,}",  # Keep for backward compatibility
             'TOTAL_PAGE_VIEWS': f"{total_page_views:,}",
+            'BOT_SESSIONS': f"{bot_sessions:,}",
+            'BOT_PERCENTAGE': f"{(bot_sessions/total_sessions*100 if total_sessions else 0):.1f}",
             'MOBILE_SESSIONS': f"{mobile:,}",
             'DESKTOP_SESSIONS': f"{desktop:,}",
             'TABLET_SESSIONS': f"{tablet:,}",
-            'MOBILE_PERCENTAGE': f"{(mobile/total_sessions*100 if total_sessions else 0):.1f}%",
-            'DESKTOP_PERCENTAGE': f"{(desktop/total_sessions*100 if total_sessions else 0):.1f}%",
-            'TABLET_PERCENTAGE': f"{(tablet/total_sessions*100 if total_sessions else 0):.1f}%",
+            'MOBILE_PERCENTAGE': f"{(mobile/total_sessions*100 if total_sessions else 0):.1f}",
+            'DESKTOP_PERCENTAGE': f"{(desktop/total_sessions*100 if total_sessions else 0):.1f}",
+            'TABLET_PERCENTAGE': f"{(tablet/total_sessions*100 if total_sessions else 0):.1f}",
             'AVG_SESSION_DURATION': self._format_duration(
                 sum(m.get('total_session_time', 0) for m in metrics) / total_sessions if total_sessions else 0
             ),
@@ -347,9 +351,12 @@ class ReportGenerator:
             content = content.replace('{PROJECT_TYPE}', 'website')
             content = content.replace('{PROJECT_URL}', 'N/A')
 
-        # Date range
+        # Date range and period
+        period_days = (date_range.end - date_range.start).days + 1
         content = content.replace('{START_DATE}', date_range.start.isoformat())
         content = content.replace('{END_DATE}', date_range.end.isoformat())
+        content = content.replace('{PERIOD_DAYS}', str(period_days))
+        content = content.replace('{GENERATED_DATE}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         content = content.replace('{REPORT_GENERATION_DATE}', datetime.now().isoformat())
 
         # Page info

@@ -229,6 +229,11 @@ print(f"Total records: {stats['total_metrics']}")
 
 ## 📚 Documentation
 
+**Quick Start:**
+- [Quick Start Guide](docs/QUICK-START.md) - Get started in 5 minutes
+- [Complete System Overview](docs/README-SUMMARY.md) - Architecture and features
+- [Date Format Reference](docs/DATE-FORMATS.md) - All supported date expressions
+
 **Quick References:**
 - [API Features & Limitations](docs/features_and_limitations.md) - What you can and can't do with the API
 - [Insights Guide](docs/clarity_insights_analysis.md) - Comprehensive analysis guide for UX/PM
@@ -238,6 +243,11 @@ print(f"Total records: {stats['total_metrics']}")
 - [Implementation Plan](implementation_plan.md) - Full technical implementation details
 - [API Research](api_research.md) - Complete Clarity API research and capabilities
 - [SECURITY.md](SECURITY.md) - Security guidelines and best practices
+
+**Examples:**
+- [E-commerce Configuration](examples/ecommerce-config.yaml)
+- [SaaS Platform Configuration](examples/saas-config.yaml)
+- [Media/Streaming Configuration](examples/media-streaming-config.yaml)
 
 ---
 

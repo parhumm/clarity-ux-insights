@@ -1,0 +1,44 @@
+---
+report_type: geographic_insights
+project_name: {PROJECT_NAME}
+date_range: {START_DATE} to {END_DATE}
+generated: {GENERATED_DATE}
+---
+
+# Geographic Insights - {PROJECT_NAME}
+
+**Period:** {START_DATE} to {END_DATE}
+
+## Global Reach
+
+**Total Countries:** {COUNTRY_COUNT}
+**Total Sessions:** {TOTAL_SESSIONS}
+
+## Top Markets
+
+{TOP_COUNTRIES_TABLE}
+
+## Regional Performance
+
+{REGIONAL_ANALYSIS}
+
+## Audience Insights
+
+### 🔧 Technical Team
+{TECHNICAL_INSIGHTS}
+
+### 🎨 UX Team
+{UX_INSIGHTS}
+
+### 📊 Business Team
+{BUSINESS_INSIGHTS}
+
+### 📢 Marketing Team
+{MARKETING_INSIGHTS}
+
+## Recommendations
+
+{RECOMMENDATIONS}
+
+---
+*Geographic data from Microsoft Clarity*

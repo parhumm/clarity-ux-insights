@@ -1,0 +1,134 @@
+---
+report_type: page_analysis
+project_name: {PROJECT_NAME}
+page_id: {PAGE_ID}
+page_path: {PAGE_PATH}
+page_name: {PAGE_NAME}
+page_category: {PAGE_CATEGORY}
+date_range: {START_DATE} to {END_DATE}
+period_days: {PERIOD_DAYS}
+generated: {GENERATED_DATE}
+---
+
+# Page Analysis: {PAGE_NAME} - {PROJECT_NAME}
+
+**Path:** `{PAGE_PATH}`
+**Category:** {PAGE_CATEGORY}
+**Period:** {START_DATE} to {END_DATE} ({PERIOD_DAYS} days)
+
+## Summary
+
+{PAGE_SUMMARY}
+
+## Key Metrics
+
+| Metric | Value | Site Average | Performance |
+|--------|-------|--------------|-------------|
+| Page Views | {PAGE_VIEWS} | -- | -- |
+| Unique Visitors | {UNIQUE_VISITORS} | -- | -- |
+| Avg Time on Page | {AVG_TIME}s | {SITE_AVG_TIME}s | {TIME_PERFORMANCE} |
+| Bounce Rate | {BOUNCE_RATE}% | {SITE_BOUNCE_RATE}% | {BOUNCE_PERFORMANCE} |
+| Quick Back Rate | {QUICK_BACK_RATE}% | {SITE_QUICK_BACK}% | {QUICK_BACK_PERFORMANCE} |
+
+## Frustration Signals
+
+| Signal | Count | Sessions Affected | % of Page Sessions |
+|--------|-------|-------------------|-------------------|
+| Quick Backs | {QUICK_BACK_COUNT} | {QUICK_BACK_SESSIONS} | {QUICK_BACK_PCT}% |
+| Dead Clicks | {DEAD_CLICK_COUNT} | {DEAD_CLICK_SESSIONS} | {DEAD_CLICK_PCT}% |
+| Rage Clicks | {RAGE_CLICK_COUNT} | {RAGE_CLICK_SESSIONS} | {RAGE_CLICK_PCT}% |
+| Scroll Issues | {SCROLL_ISSUE_COUNT} | {SCROLL_ISSUE_SESSIONS} | {SCROLL_ISSUE_PCT}% |
+
+## Device Performance on This Page
+
+{DEVICE_BREAKDOWN}
+
+## Traffic Sources
+
+{REFERRER_BREAKDOWN}
+
+## User Journey
+
+**Entry Page:** {IS_ENTRY_PAGE}
+**Exit Page:** {IS_EXIT_PAGE}
+
+### Common Previous Pages
+{PREVIOUS_PAGES}
+
+### Common Next Pages
+{NEXT_PAGES}
+
+## Audience-Specific Insights
+
+### 🔧 Technical Team
+
+**Technical Issues:**
+- {TECH_ISSUE_1}
+- {TECH_ISSUE_2}
+- {TECH_ISSUE_3}
+
+**Action Items:**
+1. {TECH_ACTION_1}
+2. {TECH_ACTION_2}
+
+### 🎨 Product/UX Team
+
+**UX Issues:**
+- {UX_ISSUE_1}
+- {UX_ISSUE_2}
+- {UX_ISSUE_3}
+
+**Design Recommendations:**
+1. {UX_REC_1}
+2. {UX_REC_2}
+
+### 📊 Business Team
+
+**Business Impact:**
+- {BUSINESS_METRIC_1}: {BUSINESS_VALUE_1}
+- {BUSINESS_METRIC_2}: {BUSINESS_VALUE_2}
+
+**Opportunities:**
+- {OPPORTUNITY_1}
+- {OPPORTUNITY_2}
+
+### 📢 Marketing Team
+
+**Campaign Performance:**
+- {CAMPAIGN_INSIGHT_1}
+- {CAMPAIGN_INSIGHT_2}
+
+**Optimization Tips:**
+- {MARKETING_TIP_1}
+- {MARKETING_TIP_2}
+
+## Comparison with Site Average
+
+{SITE_COMPARISON}
+
+## Recommendations
+
+### High Priority
+1. **{HIGH_PRI_REC_1}**
+   - Impact: {HIGH_PRI_IMPACT_1}
+   - Effort: {HIGH_PRI_EFFORT_1}
+
+2. **{HIGH_PRI_REC_2}**
+   - Impact: {HIGH_PRI_IMPACT_2}
+   - Effort: {HIGH_PRI_EFFORT_2}
+
+### Medium Priority
+1. {MED_PRI_REC_1}
+2. {MED_PRI_REC_2}
+
+### Low Priority
+1. {LOW_PRI_REC_1}
+2. {LOW_PRI_REC_2}
+
+## Trend Analysis
+
+{TREND_ANALYSIS}
+
+---
+
+*Page analytics from Microsoft Clarity • Category: {PAGE_CATEGORY}*

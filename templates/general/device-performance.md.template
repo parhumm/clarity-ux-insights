@@ -1,0 +1,56 @@
+---
+report_type: device_performance
+project_name: {PROJECT_NAME}
+date_range: {START_DATE} to {END_DATE}
+generated: {GENERATED_DATE}
+---
+
+# Device & Browser Performance - {PROJECT_NAME}
+
+**Period:** {START_DATE} to {END_DATE} ({PERIOD_DAYS} days)
+
+## Device Distribution
+
+| Device | Sessions | % of Total | Avg Engagement | Pages/Session | Frustration Rate |
+|--------|----------|------------|----------------|---------------|------------------|
+| Mobile | {MOBILE_SESSIONS} | {MOBILE_PERCENTAGE}% | {MOBILE_ENGAGEMENT}s | {MOBILE_PAGES} | {MOBILE_FRUSTRATION}% |
+| Desktop | {DESKTOP_SESSIONS} | {DESKTOP_PERCENTAGE}% | {DESKTOP_ENGAGEMENT}s | {DESKTOP_PAGES} | {DESKTOP_FRUSTRATION}% |
+| Tablet | {TABLET_SESSIONS} | {TABLET_PERCENTAGE}% | {TABLET_ENGAGEMENT}s | {TABLET_PAGES} | {TABLET_FRUSTRATION}% |
+| Other | {OTHER_SESSIONS} | {OTHER_PERCENTAGE}% | {OTHER_ENGAGEMENT}s | {OTHER_PAGES} | {OTHER_FRUSTRATION}% |
+
+## Browser Distribution
+
+{BROWSER_TABLE}
+
+## Platform Comparison
+
+### Mobile vs Desktop
+
+**Engagement:**
+- Mobile engagement: {MOBILE_VS_DESKTOP_ENGAGEMENT}
+- Recommendation: {MOBILE_VS_DESKTOP_REC}
+
+**Frustration Signals:**
+- Mobile frustration: {MOBILE_FRUSTRATION_DETAIL}
+- Desktop frustration: {DESKTOP_FRUSTRATION_DETAIL}
+
+## Audience Insights
+
+### 🔧 Technical Team
+{TECHNICAL_INSIGHTS}
+
+### 🎨 UX Team
+{UX_INSIGHTS}
+
+### 📊 Business Team
+{BUSINESS_INSIGHTS}
+
+### 📢 Marketing Team
+{MARKETING_INSIGHTS}
+
+## Recommendations
+
+{RECOMMENDATIONS}
+
+---
+*Device & browser data from Microsoft Clarity*

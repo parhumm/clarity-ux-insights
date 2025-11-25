@@ -1,0 +1,43 @@
+---
+report_type: content_performance
+project_name: {PROJECT_NAME}
+date_range: {START_DATE} to {END_DATE}
+generated: {GENERATED_DATE}
+---
+
+# Content Performance - {PROJECT_NAME}
+
+**Period:** {START_DATE} to {END_DATE}
+
+## Top Performing Pages
+
+{TOP_PAGES_TABLE}
+
+## Content Categories
+
+{CATEGORY_PERFORMANCE}
+
+## Traffic Sources
+
+{REFERRER_ANALYSIS}
+
+## Audience Insights
+
+### 🔧 Technical Team
+{TECHNICAL_INSIGHTS}
+
+### 🎨 UX Team
+{UX_INSIGHTS}
+
+### 📊 Business Team
+{BUSINESS_INSIGHTS}
+
+### 📢 Marketing Team
+{MARKETING_INSIGHTS}
+
+## Recommendations
+
+{RECOMMENDATIONS}
+
+---
+*Content analytics from Microsoft Clarity*

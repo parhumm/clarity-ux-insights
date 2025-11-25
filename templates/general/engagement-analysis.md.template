@@ -1,0 +1,48 @@
+---
+report_type: engagement_analysis
+project_name: {PROJECT_NAME}
+date_range: {START_DATE} to {END_DATE}
+generated: {GENERATED_DATE}
+---
+
+# Engagement Analysis - {PROJECT_NAME}
+
+**Period:** {START_DATE} to {END_DATE}
+
+## Engagement Metrics
+
+| Metric | Value | Benchmark | Status |
+|--------|-------|-----------|--------|
+| Avg Scroll Depth | {AVG_SCROLL_DEPTH}% | 70% | {SCROLL_STATUS} |
+| Avg Engagement Time | {AVG_ENGAGEMENT}s | 60s | {ENGAGEMENT_STATUS} |
+| Avg Active Time | {AVG_ACTIVE_TIME}s | 45s | {ACTIVE_STATUS} |
+| Pages per Session | {PAGES_PER_SESSION} | 2.0 | {PAGES_STATUS} |
+
+## Engagement Distribution
+
+{ENGAGEMENT_DISTRIBUTION}
+
+## User Behavior Patterns
+
+{BEHAVIOR_PATTERNS}
+
+## Audience Insights
+
+### 🔧 Technical Team
+{TECHNICAL_INSIGHTS}
+
+### 🎨 UX Team
+{UX_INSIGHTS}
+
+### 📊 Business Team
+{BUSINESS_INSIGHTS}
+
+### 📢 Marketing Team
+{MARKETING_INSIGHTS}
+
+## Recommendations
+
+{RECOMMENDATIONS}
+
+---
+*Engagement data from Microsoft Clarity*

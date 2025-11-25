@@ -1,0 +1,151 @@
+---
+report_type: frustration_analysis
+project_name: {PROJECT_NAME}
+project_type: {PROJECT_TYPE}
+date_range: {START_DATE} to {END_DATE}
+period_days: {PERIOD_DAYS}
+generated: {GENERATED_DATE}
+---
+
+# Frustration Signals Analysis - {PROJECT_NAME}
+
+**Period:** {START_DATE} to {END_DATE} ({PERIOD_DAYS} days)
+**Generated:** {GENERATED_DATE}
+
+## Summary
+
+{SUMMARY}
+
+**Total Sessions Analyzed:** {TOTAL_SESSIONS}
+**Sessions with Frustration Signals:** {FRUSTRATED_SESSIONS} ({FRUSTRATED_PERCENTAGE}%)
+
+## Frustration Signals Overview
+
+| Signal | Occurrences | Sessions Affected | % of Sessions |
+|--------|-------------|-------------------|---------------|
+| Quick Backs | {QUICK_BACK_COUNT} | {QUICK_BACK_SESSIONS} | {QUICK_BACK_PERCENTAGE}% |
+| Dead Clicks | {DEAD_CLICK_COUNT} | {DEAD_CLICK_SESSIONS} | {DEAD_CLICK_PERCENTAGE}% |
+| Rage Clicks | {RAGE_CLICK_COUNT} | {RAGE_CLICK_SESSIONS} | {RAGE_CLICK_PERCENTAGE}% |
+| Excessive Scrolling | {EXCESSIVE_SCROLL_COUNT} | {EXCESSIVE_SCROLL_SESSIONS} | {EXCESSIVE_SCROLL_PERCENTAGE}% |
+| Error Clicks | {ERROR_CLICK_COUNT} | {ERROR_CLICK_SESSIONS} | {ERROR_CLICK_PERCENTAGE}% |
+
+## Deep Dive: Quick Backs
+
+**Impact:** {QUICK_BACK_PERCENTAGE}% of sessions
+
+Quick backs indicate users immediately hitting the back button after landing on a page, suggesting:
+- Content mismatch with expectations
+- Page load issues
+- Misleading titles/descriptions
+- Poor mobile experience
+
+### Quick Back Breakdown
+
+{QUICK_BACK_BY_DEVICE}
+
+{QUICK_BACK_BY_PAGE}
+
+### Recommendations
+{QUICK_BACK_RECOMMENDATIONS}
+
+## Deep Dive: Dead Clicks
+
+**Impact:** {DEAD_CLICK_PERCENTAGE}% of sessions, {DEAD_CLICK_COUNT} total occurrences
+
+Dead clicks happen when users click on non-interactive elements, indicating:
+- Confusing UI/UX design
+- Elements that look clickable but aren't
+- Missing affordances
+
+### Dead Click Hotspots
+
+{DEAD_CLICK_HOTSPOTS}
+
+### Recommendations
+{DEAD_CLICK_RECOMMENDATIONS}
+
+## Deep Dive: Rage Clicks
+
+**Impact:** {RAGE_CLICK_PERCENTAGE}% of sessions
+
+Rage clicks (rapid repeated clicking) indicate severe user frustration with:
+- Broken buttons/links
+- Slow-loading elements
+- Unclear interactive states
+
+### Rage Click Analysis
+
+{RAGE_CLICK_BY_DEVICE}
+
+{RAGE_CLICK_BY_PAGE}
+
+### Recommendations
+{RAGE_CLICK_RECOMMENDATIONS}
+
+## Audience-Specific Insights
+
+### 🔧 Technical Team
+
+**Root Causes:**
+- {TECHNICAL_CAUSE_1}
+- {TECHNICAL_CAUSE_2}
+- {TECHNICAL_CAUSE_3}
+
+**Fix Priority:**
+1. {TECHNICAL_FIX_1}
+2. {TECHNICAL_FIX_2}
+3. {TECHNICAL_FIX_3}
+
+### 🎨 Product/UX Team
+
+**Design Issues:**
+- {UX_ISSUE_1}
+- {UX_ISSUE_2}
+- {UX_ISSUE_3}
+
+**UX Improvements:**
+1. {UX_IMPROVEMENT_1}
+2. {UX_IMPROVEMENT_2}
+3. {UX_IMPROVEMENT_3}
+
+### 📊 Business Team
+
+**Business Impact:**
+- Estimated lost conversions: {ESTIMATED_LOST_CONVERSIONS}
+- User satisfaction impact: {SATISFACTION_IMPACT}
+- Revenue impact: {REVENUE_IMPACT}
+
+**ROI of Fixes:**
+{ROI_ANALYSIS}
+
+### 📢 Marketing Team
+
+**Traffic Quality:**
+- High frustration sources: {HIGH_FRUSTRATION_SOURCES}
+- Low frustration sources: {LOW_FRUSTRATION_SOURCES}
+
+**Recommendations:**
+- {MARKETING_REC_1}
+- {MARKETING_REC_2}
+
+## Trend Analysis
+
+{TREND_ANALYSIS}
+
+## Action Plan
+
+### Immediate (This Week)
+1. {IMMEDIATE_ACTION_1}
+2. {IMMEDIATE_ACTION_2}
+
+### Short-term (This Month)
+1. {SHORT_TERM_ACTION_1}
+2. {SHORT_TERM_ACTION_2}
+
+### Long-term (This Quarter)
+1. {LONG_TERM_ACTION_1}
+2. {LONG_TERM_ACTION_2}
+
+---
+
+*Frustration signals data from Microsoft Clarity • Higher signals = worse UX*

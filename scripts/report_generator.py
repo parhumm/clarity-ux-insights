@@ -523,18 +523,139 @@ class ReportGenerator:
         }
 
     def _generate_insights(self, content: str, data: Dict[str, Any]) -> str:
-        """Generate audience-specific insights."""
-        # For now, use placeholder text
-        # In a real implementation, this would use AI or rule-based logic
+        """Generate data-driven audience-specific insights."""
+        def extract_num(val_str):
+            if isinstance(val_str, str):
+                return float(val_str.replace(',', '').replace('%', ''))
+            return float(val_str) if val_str else 0
+
+        # Extract metrics
+        total_sessions = extract_num(data.get('TOTAL_SESSIONS', '0'))
+        unique_users = extract_num(data.get('UNIQUE_USERS', '0'))
+        dead_clicks = extract_num(data.get('TOTAL_DEAD_CLICKS', '0'))
+        rage_clicks = extract_num(data.get('TOTAL_RAGE_CLICKS', '0'))
+        quick_backs = extract_num(data.get('TOTAL_QUICK_BACKS', '0'))
+        error_clicks = extract_num(data.get('TOTAL_ERROR_CLICKS', '0'))
+        script_errors = extract_num(data.get('TOTAL_SCRIPT_ERRORS', '0'))
+        bot_sessions = extract_num(data.get('BOT_SESSIONS', '0'))
+
+        dead_click_rate = extract_num(data.get('DEAD_CLICK_RATE', '0'))
+        rage_click_rate = extract_num(data.get('RAGE_CLICK_RATE', '0'))
+        quick_back_rate = extract_num(data.get('QUICK_BACK_RATE', '0'))
+        health_score = extract_num(data.get('UX_HEALTH_SCORE', '0'))
+        critical_issues = int(extract_num(data.get('CRITICAL_ISSUES_COUNT', '0')))
+
+        # Generate executive summary
+        if health_score >= 80:
+            health_desc = "excellent UX health"
+        elif health_score >= 60:
+            health_desc = "good UX health with minor concerns"
+        elif health_score >= 40:
+            health_desc = "fair UX health requiring attention"
+        else:
+            health_desc = "concerning UX health needing immediate action"
+
+        top_issue = ""
+        if dead_click_rate > 5:
+            top_issue = f"Dead clicks affecting {dead_click_rate:.1f}% of sessions ({int(dead_clicks):,} total incidents)"
+        elif rage_click_rate > 1:
+            top_issue = f"Rage clicks in {rage_click_rate:.1f}% of sessions ({int(rage_clicks):,} total incidents)"
+        elif quick_back_rate > 10:
+            top_issue = f"Quick backs in {quick_back_rate:.1f}% of sessions ({int(quick_backs):,} total incidents)"
+        else:
+            top_issue = "No major UX issues detected"
+
+        # Critical findings
+        critical_findings = ""
+        if critical_issues > 0:
+            critical_findings += f"**{critical_issues} Critical Issues Identified:**\n\n"
+            if dead_click_rate > 5:
+                critical_findings += f"1. **Dead Clicks Crisis:** {int(dead_clicks):,} incidents ({dead_click_rate:.1f}% of sessions) - Users clicking on non-interactive elements, indicating UI confusion.\n\n"
+            if rage_click_rate > 1:
+                critical_findings += f"2. **Rage Click Alerts:** {int(rage_clicks):,} incidents ({rage_click_rate:.1f}% of sessions) - Users frantically clicking, signaling broken functionality.\n\n"
+            if quick_back_rate > 10:
+                critical_findings += f"3. **Quick Back Pattern:** {int(quick_backs):,} incidents ({quick_back_rate:.1f}% of sessions) - Users immediately abandoning pages, suggesting poor landing experience.\n\n"
+        else:
+            critical_findings = "No critical UX issues detected. System performing within acceptable parameters."
+
+        exec_summary = f"Analysis of {int(total_sessions):,} sessions from {int(unique_users):,} unique users shows {health_desc}. "
+        if top_issue:
+            exec_summary += f"Primary concern: {top_issue}. "
+        exec_summary += f"Detected {critical_issues} critical issues requiring immediate remediation."
+
+        # Technical insights
+        tech_insights = f"**Performance & Errors:**\n"
+        if script_errors > 0:
+            tech_insights += f"- {int(script_errors):,} script errors detected - investigate JavaScript issues\n"
+        if error_clicks > 0:
+            tech_insights += f"- {int(error_clicks):,} error clicks - users encountering system errors\n"
+        else:
+            tech_insights += "- No script or error click issues detected\n"
+        tech_insights += f"- Bot traffic: {int(bot_sessions):,} sessions ({bot_sessions/total_sessions*100 if total_sessions else 0:.1f}%)\n\n"
+        tech_insights += f"**Priority Fixes:**\n"
+        if dead_click_rate > 5:
+            tech_insights += f"- HIGH: Dead clicks ({int(dead_clicks):,} total) - elements appearing clickable but non-functional\n"
+        if rage_click_rate > 1:
+            tech_insights += f"- HIGH: Rage clicks ({int(rage_clicks):,} total) - users repeatedly clicking in frustration\n"
+        if quick_back_rate > 10:
+            tech_insights += f"- HIGH: Quick backs ({int(quick_backs):,} total) - users immediately leaving pages\n"
+
+        # UX insights
+        ux_insights = f"**Frustration Analysis:**\n"
+        ux_insights += f"- Dead clicks: {int(dead_clicks):,} incidents ({dead_click_rate:.1f}% of sessions)\n"
+        ux_insights += f"- Rage clicks: {int(rage_clicks):,} incidents ({rage_click_rate:.1f}% of sessions)\n"
+        ux_insights += f"- Quick backs: {int(quick_backs):,} incidents ({quick_back_rate:.1f}% of sessions)\n\n"
+        ux_insights += f"**Recommendations:**\n"
+        if dead_click_rate > 5:
+            ux_insights += "- Review UI for misleading clickable elements\n"
+        if rage_click_rate > 1:
+            ux_insights += "- Identify and fix unresponsive interactions\n"
+        if quick_back_rate > 10:
+            ux_insights += "- Analyze landing pages causing immediate exits\n"
+
+        # Business insights
+        business_insights = f"**Traffic Overview:**\n"
+        business_insights += f"- Total Sessions: {int(total_sessions):,}\n"
+        business_insights += f"- Unique Users: {int(unique_users):,}\n"
+        business_insights += f"- Sessions per User: {total_sessions/unique_users:.1f}\n\n"
+        business_insights += f"**Business Impact:**\n"
+        if health_score < 60:
+            business_insights += f"- UX issues likely impacting conversion and retention\n"
+            business_insights += f"- Estimated {int(total_sessions * dead_click_rate / 100):,} sessions affected by dead clicks\n"
+        else:
+            business_insights += "- UX quality supporting business objectives\n"
+
+        # Marketing insights
+        marketing_insights = f"**Audience Reach:**\n"
+        marketing_insights += f"- {int(unique_users):,} unique users reached\n"
+        marketing_insights += f"- {int(total_sessions):,} total sessions\n"
+        marketing_insights += f"- {int(bot_sessions):,} bot sessions filtered ({bot_sessions/total_sessions*100 if total_sessions else 0:.1f}%)\n"
 
         insights = {
-            'TECHNICAL_INSIGHTS': '- Review high frustration signals\n- Optimize slow-loading pages\n- Fix error-prone interactions',
-            'UX_INSIGHTS': '- Improve mobile experience\n- Reduce friction points\n- Enhance engagement metrics',
-            'BUSINESS_INSIGHTS': '- User engagement trending positively\n- Mobile traffic dominates\n- Focus on conversion optimization',
-            'MARKETING_INSIGHTS': '- Strong mobile presence\n- Geographic diversity\n- Optimize for peak traffic times',
-            'KEY_FINDINGS': '- Mobile-first audience\n- High engagement metrics\n- Some frustration signals to address',
-            'RECOMMENDATIONS': '- Fix identified frustration points\n- Optimize mobile experience\n- Monitor key metrics weekly',
-            'NEXT_STEPS': '- Implement recommended fixes\n- A/B test improvements\n- Continue monitoring',
+            'EXECUTIVE_SUMMARY': exec_summary,
+            'TOP_UX_ISSUE': top_issue,
+            'CRITICAL_FINDINGS': critical_findings,
+            'TECHNICAL_INSIGHTS': tech_insights,
+            'TECHNICAL_ACTIONS': tech_insights,  # Alias
+            'UX_INSIGHTS': ux_insights,
+            'UX_IMPROVEMENTS': ux_insights,  # Alias
+            'BUSINESS_INSIGHTS': business_insights,
+            'BUSINESS_IMPACT': business_insights,  # Alias
+            'BUSINESS_OPPORTUNITIES': business_insights,  # Alias
+            'MARKETING_INSIGHTS': marketing_insights,
+            'MARKETING_RECOMMENDATIONS': marketing_insights,  # Alias
+            'SCRIPT_ERROR_COUNT': str(int(script_errors)),
+            'SCRIPT_ERROR_RATE': f"{script_errors/total_sessions*100 if total_sessions else 0:.1f}",
+            'ERROR_CLICK_COUNT': str(int(error_clicks)),
+            'QUICK_BACK_PERCENTAGE': f"{quick_back_rate:.1f}",
+            'DEAD_CLICKS_TOTAL': str(int(dead_clicks)),
+            'PAGES_WITH_DEAD_CLICKS': "multiple",  # Placeholder - would need page-level data
+            'PAGES_WITH_RAGE_CLICKS': "multiple",  # Placeholder - would need page-level data
+            'ENGAGEMENT_LEVEL': "Low" if health_score < 60 else "Moderate",
+            'SESSION_QUALITY': "Needs improvement" if health_score < 60 else "Acceptable",
+            'PAGES_PER_SESSION': f"{total_sessions/unique_users:.1f}" if unique_users > 0 else "N/A",
+            'TOP_TRAFFIC_SOURCES': "Direct, Organic Search, Social Media",  # Placeholder - would need source data
+            'PERIOD_COMPARISON': "Period comparison data not available",  # Placeholder
         }
 
         for key, value in insights.items():

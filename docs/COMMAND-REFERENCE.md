@@ -806,6 +806,142 @@ Are you sure you want to continue? (yes/no): yes
 
 ---
 
+### fetch_yesterday.py - Fetch Yesterday's Data (Recommended)
+
+**Syntax:**
+```bash
+python scripts/fetch_yesterday.py
+```
+
+**What It Does:**
+- Fetches only yesterday's data (1 day) from Clarity API
+- Minimizes API calls to avoid rate limits (6 calls total)
+- Stores data in database with duplicate prevention
+- Creates JSON backups in `data/raw/`
+- Logs all API requests in `fetch_log` table
+
+**Why Use This Instead of fetch_7days.py:**
+- **Lower rate limit impact** - Fetches 1 day instead of 3
+- **Faster execution** - Smaller data volume per request
+- **More reliable** - Less likely to hit rate limits
+- **Daily workflow friendly** - Designed to run once per day
+
+**Features:**
+- Fetches all 6 dimension breakdowns:
+  - Base metrics (no dimensions)
+  - Device breakdown (Mobile, Desktop, Tablet)
+  - Country breakdown
+  - Browser breakdown
+  - Device + Browser combinations
+  - Country + Device combinations
+- Automatic retry with exponential backoff
+- Rate limit handling (waits 60 seconds when hit)
+- Duplicate detection and prevention
+
+**Example Output:**
+```bash
+$ python scripts/fetch_yesterday.py
+
+============================================================
+FETCHING YESTERDAY'S TELEVIKA DATA
+============================================================
+Project: televika
+Fetching: Yesterday only (1 day)
+API calls planned: 6 (one per dimension)
+============================================================
+
+[1/6] Base Metrics
+💾 Saved to: data/raw/base_metrics_1day.json
+📊 Received 16 metric groups, 71 total rows
+💾 Inserted 71 new records into database
+✅ Success!
+
+[2/6] Device Breakdown
+💾 Saved to: data/raw/by_device_1day.json
+📊 Received 9 metric groups, 36 total rows
+💾 Inserted 36 new records into database
+✅ Success!
+
+...
+
+============================================================
+DATA COLLECTION COMPLETE
+============================================================
+✅ Successful: 6/6
+❌ Failed: 0/6
+
+📊 DATABASE STATISTICS:
+   Total metrics: 2,502
+   Latest fetch: 2025-11-26 07:08:53
+```
+
+**Recommended Schedule:**
+Set up a daily cron job to automatically fetch yesterday's data:
+```bash
+# Run at 2 AM daily to fetch previous day's data
+0 2 * * * cd /path/to/clarity_api && python scripts/fetch_yesterday.py
+```
+
+**Troubleshooting:**
+- **Rate Limits:** If you see "⚠️ Rate limit hit", wait a few hours and retry
+- **Token Expired:** Update `CLARITY_API_TOKEN` in `.env` file with a fresh token
+- **No Data:** Ensure project had activity yesterday in Microsoft Clarity
+
+---
+
+### migrate_yesterday_data.py - Migrate Old Schema Data
+
+**Syntax:**
+```bash
+python scripts/migrate_yesterday_data.py
+```
+
+**What It Does:**
+- Migrates data from old schema (`clarity_metrics`) to new schema (`daily_metrics`)
+- Properly parses varying JSON structures for different metric types
+- Extracts specific values based on metric type (Traffic, Dead Clicks, etc.)
+- Skips records with no useful data
+- Provides detailed migration summary
+
+**When to Use:**
+- After fetching data that went into the old `clarity_metrics` table
+- When you need to convert legacy data to the new schema
+- Automatically called by newer fetch workflows
+
+**Metric Types Handled:**
+- **Traffic metrics:** Sessions, users, bot sessions, pages per session
+- **Frustration signals:** Dead clicks, rage clicks, quick backs, error clicks, script errors
+- **Engagement metrics:** Scroll depth, engagement time, active time
+
+**Example Output:**
+```bash
+$ python scripts/migrate_yesterday_data.py
+
+============================================================
+MIGRATING YESTERDAY'S DATA
+============================================================
+
+Found 2502 records to migrate
+
+✓ Migrated 2431 records
+  Skipped 71 records
+
+📊 Database Summary:
+   2025-11-26: 2431 records
+
+✓ Traffic Data:
+   Total Sessions: 16,382
+   Total Users: 13,564
+
+============================================================
+MIGRATION COMPLETE
+============================================================
+```
+
+**Note:** This script is part of the data ingestion pipeline. Newer versions of the fetch scripts may automatically migrate data.
+
+---
+
 ### fetch_7days.py - Fetch Latest Data
 
 **Syntax:**
@@ -823,62 +959,13 @@ python scripts/fetch_7days.py
 **API Limitation Notice:**
 Microsoft Clarity's "project-live-insights" API endpoint only supports fetching the last 1-3 days of data. To accumulate 7 days of historical data, this script needs to be run daily over a week.
 
+**⚠️ Note:** Consider using `fetch_yesterday.py` instead for daily workflows to minimize rate limit issues.
+
 **Features:**
-- Fetches all 6 dimension breakdowns:
-  - Base metrics (no dimensions)
-  - Device breakdown (Mobile, Desktop, Tablet)
-  - Country breakdown
-  - Browser breakdown
-  - Device + Browser combinations
-  - Country + Device combinations
+- Fetches all 6 dimension breakdowns
 - Automatic retry with exponential backoff
 - Rate limit handling (waits 60 seconds when hit)
 - Duplicate detection and prevention
-
-**Example Output:**
-```bash
-$ python scripts/fetch_7days.py
-
-============================================================
-FETCHING TELEVIK DATA
-============================================================
-⚠️  API Limitation: Clarity API only provides last 3 days
-   For 7-day historical data, the fetch needs to run daily
-   over a week to accumulate the data.
-============================================================
-
-📥 Fetching maximum available data (last 3 days)...
-
-============================================================
-CLARITY DATA COLLECTION - FULL RUN
-============================================================
-Project: televika
-Fetching last 3 days of data
-API calls planned: 6
-============================================================
-
-[1/6] Base Metrics
-📊 Received 3 metric groups, 90 total rows
-💾 Inserted 90 new records into database
-✅ Success!
-
-[2/6] Device Breakdown
-📊 Received 3 metric groups, 270 total rows
-💾 Inserted 270 new records into database
-✅ Success!
-
-...
-
-============================================================
-DATA COLLECTION COMPLETE
-============================================================
-✅ Successful: 6/6
-❌ Failed: 0/6
-
-📊 DATABASE STATISTICS:
-   Total metrics: 3,386
-   Latest fetch: 2025-11-25 12:00:00
-```
 
 **Troubleshooting:**
 - **Rate Limits:** If you see "⚠️ Rate limit hit", the script will automatically wait and retry
